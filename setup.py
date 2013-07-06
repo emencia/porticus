@@ -21,10 +21,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=[
-        'sorl-thumbnail==11.12',
-        'django-tinymce'
-    ],
     include_package_data=True,
     zip_safe=False
 )
