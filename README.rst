@@ -15,6 +15,5 @@ Then add the content of ``porticus.settings`` in your settings file.
 
 In your settings.INSTALLED_APPS : ::
 
-    #'sorl.thumbnail',
     'parrotzik.porticus',
     'parrotzik.porticus.cmsplugin_porticus',
