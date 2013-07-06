@@ -2,6 +2,7 @@
 """
 Common templates tags for porticus
 """
+from django.conf import settings
 from django import template
 from django.utils.safestring import mark_safe
 
@@ -13,8 +14,6 @@ class GalleryFragment(template.Node):
     """
     Porticus gallery ressources as a HTML fragment
     """
-    default_template_path = 'porticus/gallery_detail_fragment.html'
-    
     def __init__(self, instance_varname, template_varname=None):
         """
         :type insert_instance_varname: string or object ``django.db.models.Model``
@@ -47,7 +46,7 @@ class GalleryFragment(template.Node):
         ressources_list = gallery_instance.ressources.filter(priority__gt=0)
 
         # Resolve optional template path
-        template_path = self.default_template_path
+        template_path = settings.PORTICUS_GALLERY_FRAGMENT_TEMPLATE
         if self.template_varname:
             try:
                 template_path = self.template_varname.resolve(context)

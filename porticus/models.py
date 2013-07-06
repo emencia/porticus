@@ -1,12 +1,12 @@
-"""Models for porticus"""
+"""
+Models for porticus
+"""
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from porticus.managers import RessourcePublishedManager
-from porticus.managers import GalleryPublishedManager
-from porticus.settings import GALLERY_TEMPLATE_CHOICES
-from porticus.settings import RESSOURCE_TEMPLATE_CHOICES
+from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 
 
 class Ressource(models.Model):
@@ -33,7 +33,7 @@ class Ressource(models.Model):
 
     template_name = models.CharField(_('template'), max_length=255,
                                      help_text=_('Template used to render the ressource'),
-                                     choices=RESSOURCE_TEMPLATE_CHOICES)
+                                     choices=settings.PORTICUS_RESSOURCE_TEMPLATE_CHOICES)
 
     priority = models.IntegerField(_('display priority'), default=100,
                     help_text=_('Set this value to 0 will hide the item'))
@@ -84,7 +84,7 @@ class Gallery(models.Model):
 
     template_name = models.CharField(_('template'), max_length=255,
                                      help_text=_('Template used to render the gallery'),
-                                     choices=GALLERY_TEMPLATE_CHOICES)
+                                     choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES)
 
     ressources = models.ManyToManyField(Ressource,
                                         verbose_name=_('ressources'))

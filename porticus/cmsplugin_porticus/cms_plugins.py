@@ -1,4 +1,6 @@
-"""Plugins for CMS"""
+"""
+DjangoCMS plugin for porticus
+"""
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_pool import plugin_pool

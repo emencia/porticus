@@ -1,9 +1,10 @@
-"""Admin for porticus"""
+"""
+Admin for porticus
+"""
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from porticus.models import Ressource
-from porticus.models import Gallery
+from porticus.models import Ressource, Gallery
 
 
 def admin_image(obj):

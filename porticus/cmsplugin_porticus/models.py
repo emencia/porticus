@@ -1,11 +1,11 @@
 """Models of porticus.cmsplugins_gallery"""
+from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models import CMSPlugin
 
 from porticus.models import Gallery
-from porticus.settings import GALLERY_PLUGIN_TEMPLATE_CHOICES
 
 
 class GalleryPlugin(CMSPlugin):
@@ -16,7 +16,7 @@ class GalleryPlugin(CMSPlugin):
 
     template_name = models.CharField(_('template'), max_length=255,
                                      help_text=_('Template used to render the plugin Gallery'),
-                                     choices=GALLERY_PLUGIN_TEMPLATE_CHOICES)
+                                     choices=settings.PORTICUS_GALLERY_PLUGIN_TEMPLATE_CHOICES)
 
     def __unicode__(self):
         return self.gallery.name

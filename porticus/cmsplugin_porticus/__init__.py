@@ -1,1 +1,3 @@
-"""Cms plugin for porticus.cmsplugin_gallery"""
+"""
+Porticus plugin for DjangoCMS
+"""
