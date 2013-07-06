@@ -1,0 +1,225 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: parrotzik.porticus\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-04 11:35+0200\n"
+"PO-Revision-Date: 2012-06-04 15:17+0100\n"
+"Last-Translator: Fantomas <Fantomas42@gmail.com>\n"
+"Language-Team: Fantomas42 <jfache@emencia.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: admin.py:16
+#, python-format
+msgid "Invalid image for %s"
+msgstr "Image invalide pour %s"
+
+#: admin.py:20
+#, python-format
+msgid "No image for %s"
+msgstr "Aucune image pour %s"
+
+#: admin.py:21
+#: models.py:23
+#: models.py:79
+msgid "image"
+msgstr "image"
+
+#: admin.py:33
+#: admin.py:58
+msgid "Descriptions"
+msgstr "Descriptions"
+
+#: admin.py:37
+msgid "File"
+msgstr "Fichier"
+
+#: admin.py:39
+msgid "You must fill one of these fields"
+msgstr "Vous devez remplir un de ces champs"
+
+#: admin.py:48
+#: models.py:111
+msgid "galleries"
+msgstr "galeries"
+
+#: models.py:14
+msgid "Binary"
+msgstr "Binaire"
+
+#: models.py:15
+msgid "Image"
+msgstr "Image"
+
+#: models.py:16
+msgid "Text"
+msgstr "Texte"
+
+#: models.py:18
+#: models.py:73
+msgid "name"
+msgstr "nom"
+
+#: models.py:19
+msgid "header"
+msgstr "en-tête"
+
+#: models.py:21
+#: models.py:76
+msgid "short description"
+msgstr "description courte"
+
+#: models.py:22
+#: models.py:75
+msgid "description"
+msgstr "description"
+
+#: models.py:26
+msgid "file type"
+msgstr "type de fichier"
+
+#: models.py:27
+msgid "file"
+msgstr "fichier"
+
+#: models.py:29
+msgid "file url"
+msgstr "URL du fichier"
+
+#: models.py:30
+msgid "file weight"
+msgstr "poids du fichier"
+
+#: models.py:32
+msgid "video"
+msgstr "Video"
+
+#: models.py:34
+#: models.py:84
+#: cmsplugin_gallery/models.py:17
+msgid "template"
+msgstr "template"
+
+#: models.py:35
+msgid "Template used to render the ressource"
+msgstr "Template utilisé pour afficher la ressource"
+
+#: models.py:38
+#: models.py:91
+msgid "display priority"
+msgstr "priorité d'affichage"
+
+#: models.py:39
+#: models.py:92
+msgid "Set this value to 0 will hide the item"
+msgstr "Mettre cette valeur à 0, cachera l'élément"
+
+#: models.py:40
+msgid "placeholder name"
+msgstr "nom du placeholder"
+
+#: models.py:41
+msgid "Used for positioning."
+msgstr "Utilisé pour le positionnement"
+
+#: models.py:43
+#: models.py:94
+msgid "creation date"
+msgstr "date de création"
+
+#: models.py:44
+#: models.py:96
+msgid "slug"
+msgstr "slug"
+
+#: models.py:59
+msgid "Please fill a file or a file url"
+msgstr "Veuillez téléverser un fichier ou indiquer une URL vers un fichier"
+
+#: models.py:66
+msgid "ressource"
+msgstr "ressource"
+
+#: models.py:67
+#: models.py:89
+msgid "ressources"
+msgstr "ressources"
+
+#: models.py:77
+msgid "credits"
+msgstr "crédits"
+
+#: models.py:81
+msgid "thumbnail"
+msgstr "miniature"
+
+#: models.py:85
+msgid "Template used to render the gallery"
+msgstr "Template utilisé pour afficher la galerie"
+
+#: models.py:110
+#: cmsplugin_gallery/cms_plugins.py:11
+#: cmsplugin_gallery/models.py:14
+msgid "gallery"
+msgstr "galerie"
+
+#: cmsplugin_gallery/cms_plugins.py:13
+msgid "Gallery"
+msgstr "Galerie"
+
+#: cmsplugin_gallery/models.py:15
+msgid "Gallery to display"
+msgstr "Galerie à afficher"
+
+#: cmsplugin_gallery/models.py:18
+msgid "Template used to render the plugin Gallery"
+msgstr "Template utilisé pour afficher le plugin de la galerie"
+
+#: templates/gallery/gallery_list.html:5
+#: templates/gallery/gallery_list.html:9
+msgid "Galleries"
+msgstr "Galeries"
+
+#: templates/gallery/gallery_list.html:18
+msgid "No gallery"
+msgstr "Aucune galerie"
+
+#: templates/gallery/gallery_list.html:26
+#: templates/gallery/ressource_list.html:26
+#, python-format
+msgid "Page %(current_page)s of %(total_page)s"
+msgstr "Page %(current_page)s sur %(total_page)s"
+
+#: templates/gallery/gallery_list.html:39
+#: templates/gallery/ressource_list.html:39
+msgid "Page"
+msgstr "Page"
+
+#: templates/gallery/ressource_list.html:5
+msgid "Ressources"
+msgstr "Ressources"
+
+#: templates/gallery/ressource_list.html:9
+msgid "Ressources for"
+msgstr "Ressources pour"
+
+#: templates/gallery/ressource_list.html:18
+msgid "No ressources"
+msgstr "Aucune ressource"
+
+#, fuzzy
+#~ msgid "low file"
+#~ msgstr "Fichier de candidature"
+#~ msgid "bin"
+#~ msgstr "Binaire"
+

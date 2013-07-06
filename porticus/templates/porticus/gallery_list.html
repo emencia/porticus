@@ -1,0 +1,51 @@
+{% extends "porticus/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Galleries" %}
+{% endblock %}
+
+{% block content %}
+<h2>{% trans "Galleries" %}</h2>
+
+<ul>
+  {% for object in object_list %}
+  <li>
+    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+  </li>
+  {% empty %}
+  <li>
+    {% trans "No gallery" %}
+  </li>
+  {% endfor %}
+</ul>
+
+{% if is_paginated %}
+<div class="paginator span-16 last">
+  <span class="index">
+    {% blocktrans with page_obj.number as current_page and paginator.num_pages as total_page %}Page {{ current_page }} of {{ total_page }}{% endblocktrans %}
+  </span>
+  {% if page_obj.has_previous %}
+  <span class="previous">
+    <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+  </span>
+  {% endif %}
+  {% for page in paginator.page_range %}
+  <span class="page {% ifequal page_obj.number page %}current{% endifequal %}">
+    {% ifequal page_obj.number page %}
+    <strong>{{ page }}</strong>
+    {% else %}
+    <a href="?page={{ page }}"
+       title="{% trans "Page" %} {{ page }}">{{ page }}</a>
+    {% endifequal%}
+  </span>
+  {% endfor %}
+  {% if page_obj.has_next %}
+  <span class="next">
+    <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+  </span>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
