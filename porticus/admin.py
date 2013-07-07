@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from sorl.thumbnail.shortcuts import get_thumbnail
 
-from porticus.models import Ressource, Album
+from porticus.models import Ressource, Gallery, Album
 
 def admin_image(obj):
     if obj.image:
@@ -66,11 +66,12 @@ class AlbumAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description', 'short_description', 'slug')
     list_filter = ('creation_date',)
     list_display = (admin_image, 'name', 'ressources_link', 'priority')
-    fieldsets = ((None, {'fields': ('name', 'image', 'thumbnail',)}),
-                 (_('Descriptions'), {'fields': ('short_description', 'description'),
+    fieldsets = ((None, {'fields': ('gallery',)}),
+                (None, {'fields': ('name', 'image', 'thumbnail',)}),
+                (_('Descriptions'), {'fields': ('short_description', 'description'),
                                       'classes': ('collapse', 'collapse-closed')}),
-                 (None, {'fields': ('ressources',)}),
-                 (None, {'fields': ('template_name', 'priority', 'slug')}),)
+                (None, {'fields': ('ressources',)}),
+                (None, {'fields': ('template_name', 'priority', 'slug')}),)
     filter_horizontal = ('ressources',)
     prepopulated_fields = {'slug': ('name', )}
 
