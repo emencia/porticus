@@ -6,13 +6,13 @@ from django.conf import settings
 from django import template
 from django.utils.safestring import mark_safe
 
-from porticus.models import Gallery
+from porticus.models import Album
 
 register = template.Library()
 
-class GalleryFragment(template.Node):
+class AlbumFragment(template.Node):
     """
-    Porticus gallery ressources as a HTML fragment
+    Porticus album ressources as a HTML fragment
     """
     def __init__(self, instance_varname, template_varname=None):
         """
@@ -33,20 +33,20 @@ class GalleryFragment(template.Node):
         :param context: Context tag object
         
         :rtype: string
-        :return: the HTML for the gallery
+        :return: the HTML for the album
         """
         html = ''
         
         # Default assume this is directly an instance
-        gallery_instance = self.instance_varname.resolve(context)
+        album_instance = self.instance_varname.resolve(context)
         # Assume this is slug
-        if isinstance(gallery_instance, basestring):
-            gallery_instance = Gallery.objects.get(slug=gallery_instance)
-        # Get the gallery's ressources
-        ressources_list = gallery_instance.ressources.filter(priority__gt=0)
+        if isinstance(album_instance, basestring):
+            album_instance = Album.objects.get(slug=album_instance)
+        # Get the album's ressources
+        ressources_list = album_instance.ressources.filter(priority__gt=0)
 
         # Resolve optional template path
-        template_path = settings.PORTICUS_GALLERY_FRAGMENT_TEMPLATE
+        template_path = settings.PORTICUS_ALBUM_FRAGMENT_TEMPLATE
         if self.template_varname:
             try:
                 template_path = self.template_varname.resolve(context)
@@ -54,7 +54,7 @@ class GalleryFragment(template.Node):
                 pass
         
         subcontext = {
-            'gallery': gallery_instance,
+            'album': album_instance,
             'object_list': ressources_list,
         }
         
@@ -62,15 +62,15 @@ class GalleryFragment(template.Node):
         
         return mark_safe(html)
 
-@register.tag(name="porticus_gallery_fragment")
-def do_porticus_gallery_fragment(parser, token):
+@register.tag(name="porticus_album_fragment")
+def do_porticus_album_fragment(parser, token):
     """
-    Display a gallery
+    Display a album
     """
     args = token.split_contents()
     if len(args) < 2:
-        raise template.TemplateSyntaxError, "You need to specify at less a \"Gallery\" instance or slug"
+        raise template.TemplateSyntaxError, "You need to specify at less a \"Album\" instance or slug"
     else:
-        return GalleryFragment(*args[1:])
+        return AlbumFragment(*args[1:])
 
-do_porticus_gallery_fragment.is_safe = True
+do_porticus_album_fragment.is_safe = True

@@ -6,15 +6,15 @@ from django.utils.translation import ugettext_lazy as _
 from cms.plugin_pool import plugin_pool
 from cms.plugin_base import CMSPluginBase
 
-from porticus.cmsplugin_gallery.models import GalleryPlugin
+from porticus.cmsplugin_album.models import AlbumPlugin
 
 
-class CMSGalleryPlugin(CMSPluginBase):
-    module = _('gallery')
-    model = GalleryPlugin
-    name = _('Gallery')
-    fields = ('gallery', 'template_name')
-    render_template = 'gallery/cms/gallery_detail.html'
+class CMSAlbumPlugin(CMSPluginBase):
+    module = _('album')
+    model = AlbumPlugin
+    name = _('Album')
+    fields = ('album', 'template_name')
+    render_template = 'album/cms/album_detail.html'
 
     def render(self, context, instance, placeholder):
         """Update the context with plugin's data"""
@@ -23,4 +23,4 @@ class CMSGalleryPlugin(CMSPluginBase):
         return context
 
 
-plugin_pool.register_plugin(CMSGalleryPlugin)
+plugin_pool.register_plugin(CMSAlbumPlugin)

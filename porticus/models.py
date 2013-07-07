@@ -6,7 +6,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
+from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
 
 class Ressource(models.Model):
@@ -21,11 +21,11 @@ class Ressource(models.Model):
     short_description = models.TextField(_('short description'), blank=True)
     description = models.TextField(_('description'), blank=True)
     image = models.ImageField(_('image'), blank=True,
-                              upload_to='gallery/ressources/images')
+                              upload_to='porticus/ressources/images')
 
     file_type = models.IntegerField(_('file type'), choices=FILETYPE_CHOICES)
     file = models.FileField(_('file'), blank=True,
-                                upload_to='gallery/ressources/files')
+                                upload_to='porticus/ressources/files')
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True,
                                    max_length=15)
@@ -71,20 +71,57 @@ class Gallery(models.Model):
     """Model representing a gallery"""
 
     name = models.CharField(_('name'), max_length=250)
-    header = models.TextField(_('header'), blank=True)
 
-    description = models.TextField(_('description'), blank=True)
     short_description = models.TextField(_('short description'), blank=True)
-    credits = models.TextField(_('credits'), blank=True)
+    description = models.TextField(_('description'), blank=True)
 
-    image = models.ImageField(_('image'), upload_to='gallery/gallery',
-                              blank=True)
-    thumbnail = models.ImageField(_('thumbnail'), upload_to='gallery/gallery/thumbs',
-                                  blank=True)
+    image = models.ImageField(_('image'), upload_to='porticus/gallery', blank=True)
+    thumbnail = models.ImageField(_('thumbnail'), upload_to='porticus/gallery/thumbs', blank=True)
 
     template_name = models.CharField(_('template'), max_length=255,
                                      help_text=_('Template used to render the gallery'),
                                      choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES)
+
+    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
+
+    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+
+    slug = models.SlugField(_('slug'), unique=True, max_length=100)
+
+    objects = models.Manager()
+    published = GalleryPublishedManager()
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('porticus-gallery-detail', (self.slug,))
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ('-priority', 'name')
+        verbose_name = _('gallery')
+        verbose_name_plural = _('galleries')
+
+
+class Album(models.Model):
+    """Model representing a album"""
+    
+    gallery = models.ForeignKey(Gallery)
+
+    name = models.CharField(_('name'), max_length=250)
+
+    description = models.TextField(_('description'), blank=True)
+    short_description = models.TextField(_('short description'), blank=True)
+
+    image = models.ImageField(_('image'), upload_to='porticus/album',
+                              blank=True)
+    thumbnail = models.ImageField(_('thumbnail'), upload_to='porticus/album/thumbs',
+                                  blank=True)
+
+    template_name = models.CharField(_('template'), max_length=255,
+                                     help_text=_('Template used to render the album'),
+                                     choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES)
 
     ressources = models.ManyToManyField(Ressource,
                                         verbose_name=_('ressources'))
@@ -97,32 +134,32 @@ class Gallery(models.Model):
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
     objects = models.Manager()
-    published = GalleryPublishedManager()
+    published = AlbumPublishedManager()
 
     @models.permalink
     def get_absolute_url(self):
-        return ('gallery_gallery_detail', (self.slug,))
+        return ('porticus-album-detail', (self.slug,))
 
     @property
     def previous(self):
-        """Return the previous gallery"""
-        galleries = Gallery.published.filter(
+        """Return the previous album"""
+        albums = Album.published.filter(
             priority__lt=self.priority)[:1]
-        if galleries:
-            return galleries[0]
+        if albums:
+            return albums[0]
 
     @property
     def next(self):
-        """Return the next gallery"""
-        galleries = Gallery.published.filter(
+        """Return the next album"""
+        albums = Album.published.filter(
             priority__gt=self.priority).order_by('priority')[:1]
-        if galleries:
-            return galleries[0]
+        if albums:
+            return albums[0]
 
     def __unicode__(self):
         return self.name
 
     class Meta:
         ordering = ('-priority', 'name')
-        verbose_name = _('gallery')
-        verbose_name_plural = _('galleries')
+        verbose_name = _('album')
+        verbose_name_plural = _('albums')

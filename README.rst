@@ -1,11 +1,11 @@
 porticus
 ========
 
-Yet another File gallery for Django. Galleries contains Ressources, ressources is your files items. Usually used like an image gallery, you can also use it like a download center for many file types.
+Yet another File gallery for Django. **Galleries** contains **Albums** that contains **Ressources** and ressources is your files items. Usually used like an image gallery, you can also use it like a download center for many file types.
 
 In your urls.py : ::
 
-    url(r'^porticus/', include('parrotzik.porticus.urls')),
+    url(r'^porticus/', include('porticus.urls')),
 
 Or to point out a specific gallery : ::
 
@@ -15,5 +15,5 @@ Then add the content of ``porticus.settings`` in your settings file.
 
 In your settings.INSTALLED_APPS : ::
 
-    'parrotzik.porticus',
-    'parrotzik.porticus.cmsplugin_porticus',
+    'porticus',
+    'porticus.cmsplugin_porticus',
