@@ -22,56 +22,49 @@ admin_image.short_description = _('image')
 admin_image.allow_tags = True
 
 
-class RessourceAdmin(admin.ModelAdmin):
-    ordering = ('-creation_date',)
-    search_fields = ('name', 'description', 'short_description', 'slug')
-    list_filter = ('file_type', 'creation_date', 'album')
-    list_editable = ('placeholder_name',)
-    list_display = (admin_image, 'name', 'file_type',
-                    'get_albums', 'placeholder_name',
-                    'get_file', 'file_weight', 'priority')
-    fieldsets = ((None, {'fields': ('name', 'file_type', 'image')}),
-                 (_('Descriptions'), {'fields': (
-                     'header', 'short_description', 'description'),
-                                      'classes': ('collapse',
-                                                  'collapse-closed')}),
-                 (_('File'), {'fields': ('file', 'file_url'),
-                              'description':
-                              _('You must fill one of these fields')}),
-                 (None, {'fields': ('file_weight',)}),
-                 (None, {'fields': ('video',)}),
-                 (None, {'fields': ('placeholder_name',)}),
-                 (None, {'fields': ('template_name', 'priority', 'slug')}),)
-    prepopulated_fields = {'slug': ('name', )}
-
-    def get_albums(self, r):
-        return ', '.join([n.name for n in r.album_set.all()])
-    get_albums.short_description = _('albums')
-
-
 class GalleryAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
-    search_fields = ('name', 'description', 'short_description', 'slug')
+    search_fields = ('name', 'description', 'slug')
     list_filter = ('creation_date',)
+    list_editable = ('priority',)
     list_display = (admin_image, 'name', 'priority')
-    fieldsets = ((None, {'fields': ('name', 'image', 'thumbnail',)}),
-                 (_('Descriptions'), {'fields': ('short_description', 'description'),
-                                      'classes': ('collapse', 'collapse-closed')}),
-                 (None, {'fields': ('template_name', 'priority', 'slug')}),)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'image')
+        }),
+        (None, {
+            'fields': ('description',),
+        }),
+        (None, {
+            'fields': ('template_name', 'priority', 'slug')
+        }),
+    )
     prepopulated_fields = {'slug': ('name', )}
 
 
 class AlbumAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
-    search_fields = ('name', 'description', 'short_description', 'slug')
+    search_fields = ('name', 'description', 'slug')
     list_filter = ('creation_date',)
+    list_editable = ('priority',)
     list_display = (admin_image, 'name', 'ressources_link', 'priority')
-    fieldsets = ((None, {'fields': ('gallery',)}),
-                (None, {'fields': ('name', 'image', 'thumbnail',)}),
-                (_('Descriptions'), {'fields': ('short_description', 'description'),
-                                      'classes': ('collapse', 'collapse-closed')}),
-                (None, {'fields': ('ressources',)}),
-                (None, {'fields': ('template_name', 'priority', 'slug')}),)
+    fieldsets = (
+        (None, {
+            'fields': ('gallery',)
+        }),
+        (None, {
+            'fields': ('name', 'image',)
+        }),
+        (None, {
+            'fields': ('description',),
+        }),
+        (None, {
+            'fields': ('ressources',)
+        }),
+        (None, {
+            'fields': ('template_name', 'priority', 'slug')
+        }),
+    )
     filter_horizontal = ('ressources',)
     prepopulated_fields = {'slug': ('name', )}
 
@@ -82,6 +75,34 @@ class AlbumAdmin(admin.ModelAdmin):
         return '<br />'.join(links)
     ressources_link.allow_tags = True
     ressources_link.short_description = _('Ressources')
+
+
+class RessourceAdmin(admin.ModelAdmin):
+    ordering = ('-creation_date',)
+    search_fields = ('name', 'description')
+    list_filter = ('file_type', 'creation_date', 'album')
+    list_editable = ('priority',)
+    list_display = (admin_image, 'name', 'file_type', 'get_albums', 'file_weight', 'priority')
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'image', 'priority'),
+        }),
+        (None, {
+            'fields': ('description',),
+        }),
+        (_('File'), {
+            'fields': ('file_type', 'file', 'file_url', 'file_weight'), 
+            'description': _('You must fill one of these fields'),
+        }),
+        (None, {
+            'fields': (),
+        }),
+    )
+
+    def get_albums(self, r):
+        return ', '.join([n.name for n in r.album_set.all()])
+    get_albums.short_description = _('albums')
+
 
 admin.site.register(Gallery, GalleryAdmin)
 admin.site.register(Album, AlbumAdmin)

@@ -2,10 +2,10 @@
 Urls for porticus
 """
 from django.conf.urls.defaults import url, patterns
+from porticus.views import GalleryListView, GalleryDetailView, AlbumDetailView
 
 urlpatterns = patterns('porticus.views',
-    url(r'^$', 'view_album_list', name='porticus-album-list'),
-    url(r'^page/(?P<page>\d+)/$', 'view_album_list', name='porticus-album-list-paginated'),
-    url(r'^(?P<slug>[-\w]+)/$', 'view_album_detail', name='porticus-album-detail'),
-    url(r'^(?P<slug>[-\w]+)/page/(?P<page>\d+)/$', 'view_album_detail', name='porticus-album-detail-paginated'),
+    url(r'^$', GalleryListView.as_view(), name='porticus-galleries-index'),
+    url(r'^(?P<detail_slug>[-\w]+)/$', GalleryDetailView.as_view(), name='porticus-gallery-detail'),
+    url(r'^(?P<parent_slug>[-\w]+)/(?P<detail_slug>[-\w]+)/$', AlbumDetailView.as_view(), name='porticus-album-detail'),
 )

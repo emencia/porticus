@@ -11,37 +11,26 @@ from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 
 class Ressource(models.Model):
     """Model for representing a ressource"""
-    FILETYPE_CHOICES = ((0, _('Binary')),
-                        (1, _('Image')),
-                        (2, _('Text')),)
+    FILETYPE_CHOICES = (
+        (0, _('Binary')),
+        (1, _('Image')),
+        (2, _('Text')),
+    )
 
     name = models.CharField(_('name'), max_length=250)
-    header = models.TextField(_('header'), blank=True)
 
-    short_description = models.TextField(_('short description'), blank=True)
     description = models.TextField(_('description'), blank=True)
-    image = models.ImageField(_('image'), blank=True,
-                              upload_to='porticus/ressources/images')
+    
+    image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
 
     file_type = models.IntegerField(_('file type'), choices=FILETYPE_CHOICES)
-    file = models.FileField(_('file'), blank=True,
-                                upload_to='porticus/ressources/files')
+    file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
     file_url = models.URLField(_('file url'), blank=True)
-    file_weight = models.CharField(_('file weight'), blank=True,
-                                   max_length=15)
-    video = models.TextField(_('video'), blank=True)
+    file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
-    template_name = models.CharField(_('template'), max_length=255,
-                                     help_text=_('Template used to render the ressource'),
-                                     choices=settings.PORTICUS_RESSOURCE_TEMPLATE_CHOICES)
-
-    priority = models.IntegerField(_('display priority'), default=100,
-                    help_text=_('Set this value to 0 will hide the item'))
-    placeholder_name = models.CharField(_('placeholder name'), max_length=250,
-                                        blank=True, help_text=_('Used for positioning.'))
+    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
-    slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
     objects = models.Manager()
     published = RessourcePublishedManager()
@@ -55,8 +44,7 @@ class Ressource(models.Model):
 
     def clean(self):
         if not self.get_file:
-            raise ValidationError(
-                _('Please fill a file or a file url'))
+            raise ValidationError(_('Please fill a file or a file url'))
 
     def __unicode__(self):
         return self.name
@@ -72,15 +60,11 @@ class Gallery(models.Model):
 
     name = models.CharField(_('name'), max_length=250)
 
-    short_description = models.TextField(_('short description'), blank=True)
     description = models.TextField(_('description'), blank=True)
 
     image = models.ImageField(_('image'), upload_to='porticus/gallery', blank=True)
-    thumbnail = models.ImageField(_('thumbnail'), upload_to='porticus/gallery/thumbs', blank=True)
 
-    template_name = models.CharField(_('template'), max_length=255,
-                                     help_text=_('Template used to render the gallery'),
-                                     choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES)
+    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES)
 
     priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
 
@@ -112,33 +96,25 @@ class Album(models.Model):
     name = models.CharField(_('name'), max_length=250)
 
     description = models.TextField(_('description'), blank=True)
-    short_description = models.TextField(_('short description'), blank=True)
 
-    image = models.ImageField(_('image'), upload_to='porticus/album',
-                              blank=True)
-    thumbnail = models.ImageField(_('thumbnail'), upload_to='porticus/album/thumbs',
-                                  blank=True)
+    image = models.ImageField(_('image'), upload_to='porticus/album', blank=True)
 
-    template_name = models.CharField(_('template'), max_length=255,
-                                     help_text=_('Template used to render the album'),
-                                     choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES)
+    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES)
 
-    ressources = models.ManyToManyField(Ressource,
-                                        verbose_name=_('ressources'))
-
-    priority = models.IntegerField(_('display priority'), default=100,
-                                   help_text=_('Set this value to 0 will hide the item'))
+    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
+
+    ressources = models.ManyToManyField(Ressource, verbose_name=_('ressources'))
 
     objects = models.Manager()
     published = AlbumPublishedManager()
 
     @models.permalink
     def get_absolute_url(self):
-        return ('porticus-album-detail', (self.slug,))
+        return ('porticus-album-detail', (self.gallery.slug, self.slug,))
 
     @property
     def previous(self):

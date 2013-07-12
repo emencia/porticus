@@ -1,43 +1,55 @@
 {% extends "porticus/base.html" %}
 {% load i18n %}
+{% load url from future %}
 
-{% block head_more_js %}<script type="text/javascript">
-    //<![CDATA[
-        $(document).ready(function() {
-            $('#carousel-porticus-{{ gallery.id }}').carousel({interval: 5000});
-        });
-    //]]>
-</script>
-{% endblock %}
+{% block foot_more_js %}<script type="text/javascript">
+    $('.popup-link').magnificPopup({type: 'image'});
+</script>{% endblock %}
 
 {% block base_content %}
-<div id="carousel-porticus-{{ gallery.id }}" class="carousel slide">
-    <div class="carousel-inner">{% for ressource in object_list %}
-        {% spaceless %}<div class="item {% if forloop.first %}active{% endif %}">
-            {% if ressource.file_url %}
-                {% ifequal ressource.file_type 0 %}
-                    <a href="{{ ressource.file_url }}" onclick="window.open(this.href); return false;">
+<div class="row">
+    <div class="album-detail-{{ album_object.id }}">
+        <h3>{{ album_object.name }}</h3>
+        {% if album_object.description %}
+            <p>{{ album_object.description }}</p>
+        {% endif %}
+        
+        <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
+        {% spaceless %}
+            <div class="three columns item equalized-item">
+                {% if ressource.file_url %}
+                    {% ifequal ressource.file_type 0 %}
+                        <a href="{{ ressource.file_url }}" target="_blank">
+                    {% else %}
+                        <a href="{{ ressource.file_url }}">
+                    {% endifequal %}
                 {% else %}
-                    <a href="{{ ressource.file_url  }}">
-                {% endifequal %}
-            {% endif %}
-                
-                {% if ressource.image  %}
-                    <img src="{{ ressource.image.url }}" alt="{{ ressource.short_description  }}">
-                {% else %}
-                    <img src="{{ ressource.file.url }}" alt="{{ ressource.short_description  }}">
+                    <a href="{{ ressource.file.url }}" class="popup-link">
                 {% endif %}
                 
-            {% if ressource.file_url %}</a>{% endif %}
-            
-            {% if ressource.short_description or ressource.description %}
-            <div class="carousel-caption">
-                <p>{{ ressource.short_description }}</p>
+                {% if ressource.image %}
+                    <img src="{{ ressource.image.url }}" alt="">
+                {% endif %}
+                
+                    <h4>{{ ressource.name }}</h4>
+                </a>
+                
+                {% if ressource.description %}
+                <div class="description">
+                    <p>{{ ressource.description }}</p>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-        </div>{% endspaceless %}
-    {% endfor %}</div>
-    <a class="left carousel-control" href="#carousel-porticus-{{ gallery.id }}" data-slide="prev">&lsaquo;</a>
-    <a class="right carousel-control" href="#carousel-porticus-{{ gallery.id }}" data-slide="next">&rsaquo;</a>
+        {% endspaceless %}
+        {% endfor %}</div>
+        
+        {% if is_paginated %}<ul class="pagination right">
+            {% if page_obj.has_previous %}<li class="arrow"><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>{% endif %}
+            {% for item in paginator.page_range %}
+            <li{% if item == page_obj.number %} class="current"{% endif %}><a href="?page={{ item }}">{{ item }}</a></li>
+            {% endfor %}
+            {% if page_obj.has_next %}<li class="arrow"><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>{% endif %}
+        </ul>{% endif %}
+    </div>
 </div>
 {% endblock%}

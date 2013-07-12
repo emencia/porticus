@@ -46,7 +46,7 @@ class AlbumFragment(template.Node):
         ressources_list = album_instance.ressources.filter(priority__gt=0)
 
         # Resolve optional template path
-        template_path = settings.PORTICUS_ALBUM_FRAGMENT_TEMPLATE
+        template_path = settings.PORTICUS_ALBUM_TEMPLATE_FRAGMENT
         if self.template_varname:
             try:
                 template_path = self.template_varname.resolve(context)
@@ -54,7 +54,7 @@ class AlbumFragment(template.Node):
                 pass
         
         subcontext = {
-            'album': album_instance,
+            'album_object': album_instance,
             'object_list': ressources_list,
         }
         
