@@ -9,52 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
 
-class Ressource(models.Model):
-    """Model for representing a ressource"""
-    FILETYPE_CHOICES = (
-        (0, _('Binary')),
-        (1, _('Image')),
-        (2, _('Text')),
-    )
-
-    name = models.CharField(_('name'), max_length=250)
-
-    description = models.TextField(_('description'), blank=True)
-    
-    image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
-
-    file_type = models.IntegerField(_('file type'), choices=FILETYPE_CHOICES)
-    file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
-    file_url = models.URLField(_('file url'), blank=True)
-    file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
-
-    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
-
-    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
-
-    objects = models.Manager()
-    published = RessourcePublishedManager()
-
-    @property
-    def get_file(self):
-        try:
-            return self.file_url or self.file.url
-        except ValueError:
-            return None
-
-    def clean(self):
-        if not self.get_file:
-            raise ValidationError(_('Please fill a file or a file url'))
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        ordering = ('-priority', 'name')
-        verbose_name = _('ressource')
-        verbose_name_plural = _('ressources')
-
-
 class Gallery(models.Model):
     """Model representing a gallery"""
 
@@ -107,7 +61,7 @@ class Album(models.Model):
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
-    ressources = models.ManyToManyField(Ressource, verbose_name=_('ressources'))
+    #ressources = models.ManyToManyField(Ressource, verbose_name=_('ressources'))
 
     objects = models.Manager()
     published = AlbumPublishedManager()
@@ -139,3 +93,51 @@ class Album(models.Model):
         ordering = ('-priority', 'name')
         verbose_name = _('album')
         verbose_name_plural = _('albums')
+
+
+class Ressource(models.Model):
+    """Model for representing a ressource"""
+    FILETYPE_CHOICES = (
+        (0, _('Binary')),
+        (1, _('Image')),
+        (2, _('Text')),
+    )
+    
+    album = models.ForeignKey(Album)
+
+    name = models.CharField(_('name'), max_length=250)
+
+    description = models.TextField(_('description'), blank=True)
+    
+    image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
+
+    file_type = models.IntegerField(_('file type'), choices=FILETYPE_CHOICES)
+    file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
+    file_url = models.URLField(_('file url'), blank=True)
+    file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
+
+    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
+
+    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+
+    objects = models.Manager()
+    published = RessourcePublishedManager()
+
+    @property
+    def get_file(self):
+        try:
+            return self.file_url or self.file.url
+        except ValueError:
+            return None
+
+    def clean(self):
+        if not self.get_file:
+            raise ValidationError(_('Please fill a file or a file url'))
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ('-priority', 'name')
+        verbose_name = _('ressource')
+        verbose_name_plural = _('ressources')

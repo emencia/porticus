@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block title %}{% trans "Galleries" %}{% endblock %}
+{% block head_title %}{% trans "Galleries" %} - {{ block.super }}{% endblock %}
 
 {% block content %}<div class="row">
     <h2>{% trans "Galleries" %}</h2>

@@ -1,7 +1,9 @@
 porticus
 ========
 
-Yet another File gallery for Django. **Galleries** contains **Albums** that contains **Ressources** and ressources is your files items. Usually used like an image gallery, you should also use it like a download center for many file types.
+Yet another File gallery for Django.
+
+**Galleries** contains **Albums** that contains **Ressources** and ressources are your files items. Usually used like an image gallery, you should also use it like a download center for many file types.
 
 Requires
 ********

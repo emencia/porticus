@@ -45,9 +45,9 @@ class GalleryAdmin(admin.ModelAdmin):
 class AlbumAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('creation_date',)
+    list_filter = ('creation_date', 'gallery')
     list_editable = ('priority',)
-    list_display = (admin_image, 'name', 'ressources_link', 'priority')
+    list_display = (admin_image, 'name', 'ressources_count', 'priority')
     fieldsets = (
         (None, {
             'fields': ('gallery',)
@@ -59,22 +59,14 @@ class AlbumAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
         (None, {
-            'fields': ('ressources',)
-        }),
-        (None, {
             'fields': ('template_name', 'priority', 'slug')
         }),
     )
-    filter_horizontal = ('ressources',)
     prepopulated_fields = {'slug': ('name', )}
 
-    def ressources_link(self, album):
-        links = []
-        for r in album.ressources.all():
-            links.append('<a href="/admin/porticus/ressource/%s">%s</a>' % (r.id, str(r)))
-        return '<br />'.join(links)
-    ressources_link.allow_tags = True
-    ressources_link.short_description = _('Ressources')
+    def ressources_count(self, album):
+        return album.ressource_set.all().count()
+    ressources_count.short_description = _('Ressources')
 
 
 class RessourceAdmin(admin.ModelAdmin):
@@ -82,8 +74,11 @@ class RessourceAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     list_filter = ('file_type', 'creation_date', 'album')
     list_editable = ('priority',)
-    list_display = (admin_image, 'name', 'file_type', 'get_albums', 'file_weight', 'priority')
+    list_display = (admin_image, 'album', 'name', 'file_type', 'file_weight', 'priority')
     fieldsets = (
+        (None, {
+            'fields': ('album',),
+        }),
         (None, {
             'fields': ('name', 'image', 'priority'),
         }),
@@ -98,10 +93,6 @@ class RessourceAdmin(admin.ModelAdmin):
             'fields': (),
         }),
     )
-
-    def get_albums(self, r):
-        return ', '.join([n.name for n in r.album_set.all()])
-    get_albums.short_description = _('albums')
 
 
 admin.site.register(Gallery, GalleryAdmin)

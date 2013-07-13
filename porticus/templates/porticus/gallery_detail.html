@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load url from future %}
 
+{% block head_title %}{{ gallery_object.name }} - {{ block.super }}{% endblock %}
+
 {% block base_content %}
 <div class="row">
     <div class="gallery-detail-{{ gallery_object.id }}">

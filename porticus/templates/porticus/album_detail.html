@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load url from future %}
 
+{% block head_title %}{{ album_object.name }} - {{ block.super }}{% endblock %}
+
 {% block foot_more_js %}<script type="text/javascript">
     $('.popup-link').magnificPopup({type: 'image'});
 </script>{% endblock %}
