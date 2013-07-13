@@ -1,0 +1,36 @@
+{% load i18n thumbnail %}{% load url from future %}
+<div class="album-detail-{{ album_object.id }}">
+    <h3>{{ album_object.name }}</h3>
+    {% if album_object.description %}
+        <p>{{ album_object.description }}</p>
+    {% endif %}
+    
+    <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
+    {% spaceless %}
+        <div class="three columns item equalized-item">
+            {% if ressource.file_url %}
+                {% ifequal ressource.file_type 0 %}
+                    <a href="{{ ressource.file_url }}" target="_blank">
+                {% else %}
+                    <a href="{{ ressource.file_url }}">
+                {% endifequal %}
+            {% else %}
+                <a href="{{ ressource.file.url }}" class="popup-link">
+            {% endif %}
+            
+            {% if ressource.image %}
+                {% thumbnail ressource.image "105x105" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
+            {% endif %}
+            
+                <h4>{{ ressource.name }}</h4>
+            </a>
+            
+            {% if ressource.description %}
+            <div class="description">
+                <p>{{ ressource.description }}</p>
+            </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+    {% endfor %}</div>
+</div>

@@ -1,5 +1,5 @@
 {% extends "porticus/base.html" %}
-{% load i18n %}
+{% load i18n thumbnail %}
 {% load url from future %}
 
 {% block head_title %}{{ gallery_object.name }} - {{ block.super }}{% endblock %}
@@ -17,7 +17,7 @@
             <div class="four mobile-two columns item equalized-item"><a href="{% url 'porticus-album-detail' parent_slug=gallery_object.slug detail_slug=album.slug %}">
                 <div class="six columns thumb">
                     {% if album.image  %}
-                        <img src="{{ album.image.url }}" alt="">
+                        {% thumbnail album.image "105x80" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
                     {% endif %}
                 </div>
                 <div class="six columns content">

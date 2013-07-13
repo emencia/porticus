@@ -1,5 +1,5 @@
 {% extends "porticus/base.html" %}
-{% load i18n %}
+{% load i18n thumbnail %}
 {% load url from future %}
 
 {% block head_title %}{{ album_object.name }} - {{ block.super }}{% endblock %}
@@ -30,7 +30,7 @@
                 {% endif %}
                 
                 {% if ressource.image %}
-                    <img src="{{ ressource.image.url }}" alt="">
+                    {% thumbnail ressource.image "105x105" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
                 {% endif %}
                 
                     <h4>{{ ressource.name }}</h4>

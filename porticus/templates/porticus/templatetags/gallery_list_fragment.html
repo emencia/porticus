@@ -1,0 +1,10 @@
+{% load i18n %}{% load url from future %}
+<ul>
+    {% for object in object_list %}
+    <li class="panel radius">
+        <a href="{% url 'porticus-gallery-detail' detail_slug=object.slug %}">{{ object }}</a>
+    </li>
+    {% empty %}
+    <li class="empty">{% trans "No gallery" %}</li>
+    {% endfor %}
+</ul>

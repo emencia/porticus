@@ -15,11 +15,6 @@ class SimpleListView(TemplateResponseMixin, BaseListView):
     """
     Like generic.ListView but use only ``get_template`` to find template and not an
     automatic process on ``get_template_names``
-    
-    paginate_by = settings.PORTICUS_PAGINATION
-    get_queryset()
-    template_name || get_template()
-    model = ...
     """
     pass
 
@@ -34,7 +29,7 @@ class DetailListView(SimpleListView):
     def get_detail_object(self):
         if self.detail_model is None:
             raise ImproperlyConfigured(u"%(cls)s's 'detail_model' class attribute must be defined " % {"cls": self.__class__.__name__})
-        return get_object_or_404(self.detail_model, slug=self.kwargs.get('detail_slug'))
+        return get_object_or_404(self.detail_model, slug=self.kwargs.get('detail_slug'), priority__gt=0)
 
     def get(self, request, *args, **kwargs):
         self.detail_object = self.get_detail_object()
@@ -48,7 +43,7 @@ class DetailListView(SimpleListView):
 
 
 class GalleryListView(SimpleListView):
-    paginate_by = settings.PORTICUS_PAGINATION
+    paginate_by = settings.PORTICUS_GALLERIES_PAGINATION
     model = Gallery
     template_name = "porticus/gallery_list.html"
 
@@ -58,11 +53,10 @@ class GalleryDetailView(DetailListView):
     context_parent_object_name = 'gallery_object'
     
     model = Album
-    paginate_by = settings.PORTICUS_PAGINATION
+    paginate_by = settings.PORTICUS_ALBUMS_PAGINATION
 
     def get_queryset(self):
-        # TODO: use the correct manager
-        return self.detail_object.album_set.all().order_by('priority', 'name')
+        return self.detail_object.album_set.all().filter(priority__gt=0).order_by('priority', 'name')
     
     def get_template_names(self):
         return (self.detail_object.template_name,)
@@ -73,14 +67,14 @@ class AlbumDetailView(DetailListView):
     context_parent_object_name = 'album_object'
     
     model = Ressource
-    paginate_by = settings.PORTICUS_PAGINATION
+    paginate_by = settings.PORTICUS_RESSOURCES_PAGINATION
 
     def get_detail_object(self):
-        self.gallery_object = get_object_or_404(Gallery, slug=self.kwargs.get('parent_slug'))
+        self.gallery_object = get_object_or_404(Gallery, slug=self.kwargs.get('parent_slug'), priority__gt=0)
         return super(AlbumDetailView, self).get_detail_object()
 
     def get_queryset(self):
-        return self.detail_object.ressource_set.all().order_by('priority', 'name')
+        return self.detail_object.ressource_set.all().filter(priority__gt=0).order_by('priority', 'name')
 
     def get_context_data(self, **kwargs):
         kwargs.update({
