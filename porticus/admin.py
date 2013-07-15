@@ -4,6 +4,8 @@ Admin for porticus
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.admin import MPTTModelAdmin
+
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 from porticus.models import Ressource, Gallery, Album
@@ -42,15 +44,15 @@ class GalleryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 
 
-class AlbumAdmin(admin.ModelAdmin):
+class AlbumAdmin(MPTTModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description', 'slug')
     list_filter = ('creation_date', 'gallery')
     list_editable = ('priority',)
-    list_display = (admin_image, 'name', 'ressources_count', 'priority')
+    list_display = ('name', 'ressources_count', 'priority')
     fieldsets = (
         (None, {
-            'fields': ('gallery',)
+            'fields': ('gallery','parent',)
         }),
         (None, {
             'fields': ('name', 'image',)
@@ -63,6 +65,7 @@ class AlbumAdmin(admin.ModelAdmin):
         }),
     )
     prepopulated_fields = {'slug': ('name', )}
+    mptt_level_indent = 25
 
     def ressources_count(self, album):
         return album.ressource_set.all().count()

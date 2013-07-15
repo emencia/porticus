@@ -1,0 +1,42 @@
+{% extends "porticus/base.html" %}
+{% load i18n mptt_tags thumbnail %}
+{% load url from future %}
+
+{% block head_title %}{{ gallery_object.name }} - {{ block.super }}{% endblock %}
+
+{% block base_content %}
+<div class="row">
+    <div class="gallery-detail-{{ gallery_object.id }}">
+        <h3>{{ gallery_object.name }}</h3>
+        {% if gallery_object.description %}
+            <p>{{ gallery_object.description }}</p>
+        {% endif %}
+        
+        <hr>
+        
+        <ul class="root">
+            {% recursetree album_list %}
+                <li>{% spaceless %}
+                    <div class="row panel">
+                        <div class="four mobile-two columns item equalized-item"><a href="{% url 'porticus-album-detail' parent_slug=gallery_object.slug detail_slug=node.slug %}">
+                            <div class="six columns thumb">
+                                {% if node.image  %}
+                                    {% thumbnail node.image "105x80" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
+                                {% endif %}
+                            </div>
+                            <div class="six columns content">
+                                <p>{{ node.name }}</p>
+                            </div>
+                        </a></div>
+                    </div>
+                    {% endspaceless %}
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+</div>
+{% endblock%}

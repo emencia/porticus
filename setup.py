@@ -22,6 +22,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
+        'django-mptt==0.5.2',
         'sorl-thumbnail==11.12',
     ],
     include_package_data=True,

@@ -21,7 +21,8 @@ class SimpleListView(TemplateResponseMixin, BaseListView):
 
 class DetailListView(SimpleListView):
     """
-    Get a child list from an object
+    Like SimpleListView but require a detail object model that will be used to 
+    find a list object from his relations
     """
     detail_model = None
     context_parent_object_name = 'detail_object'
@@ -43,6 +44,9 @@ class DetailListView(SimpleListView):
 
 
 class GalleryListView(SimpleListView):
+    """
+    View to diplay a paginated list of galleries
+    """
     paginate_by = settings.PORTICUS_GALLERIES_PAGINATION
     model = Gallery
     template_name = "porticus/gallery_list.html"
@@ -60,6 +64,21 @@ class GalleryDetailView(DetailListView):
     
     def get_template_names(self):
         return (self.detail_object.template_name,)
+
+
+class GalleryTreeView(GalleryDetailView):
+    """
+    Display the album tree for a gallery, inherit from GalleryDetailView, does not 
+    follow the gallery template
+    """
+    paginate_by = None
+    template_name = "porticus/gallery_tree.html"
+
+    def get_queryset(self):
+        return self.detail_object.album_set.filter(priority__gt=0)
+    
+    def get_template_names(self):
+        return (self.template_name,)
 
 
 class AlbumDetailView(DetailListView):

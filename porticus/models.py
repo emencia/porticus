@@ -6,7 +6,9 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
+from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
+
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Gallery(models.Model):
@@ -42,10 +44,11 @@ class Gallery(models.Model):
         verbose_name_plural = _('galleries')
 
 
-class Album(models.Model):
-    """Model representing a album"""
-    
+class Album(MPTTModel):
+    """Model representing an album"""
     gallery = models.ForeignKey(Gallery)
+
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     name = models.CharField(_('name'), max_length=250)
 
@@ -61,38 +64,20 @@ class Album(models.Model):
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
-    #ressources = models.ManyToManyField(Ressource, verbose_name=_('ressources'))
-
-    objects = models.Manager()
-    published = AlbumPublishedManager()
+    def __unicode__(self):
+        return self.name
 
     @models.permalink
     def get_absolute_url(self):
         return ('porticus-album-detail', (self.gallery.slug, self.slug,))
 
-    @property
-    def previous(self):
-        """Return the previous album"""
-        albums = Album.published.filter(
-            priority__lt=self.priority)[:1]
-        if albums:
-            return albums[0]
-
-    @property
-    def next(self):
-        """Return the next album"""
-        albums = Album.published.filter(
-            priority__gt=self.priority).order_by('priority')[:1]
-        if albums:
-            return albums[0]
-
-    def __unicode__(self):
-        return self.name
-
     class Meta:
-        ordering = ('-priority', 'name')
+        #ordering = ('priority', 'name')
         verbose_name = _('album')
         verbose_name_plural = _('albums')
+
+    class MPTTMeta:
+        order_insertion_by = ['gallery', 'priority', 'name']
 
 
 class Ressource(models.Model):
