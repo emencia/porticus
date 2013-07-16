@@ -49,7 +49,7 @@ class AlbumAdmin(MPTTModelAdmin):
     search_fields = ('name', 'description', 'slug')
     list_filter = ('creation_date', 'gallery')
     list_editable = ('priority',)
-    list_display = ('name', 'ressources_count', 'priority')
+    list_display = ('name', 'slug', 'template_name', 'ressources_count', 'priority')
     fieldsets = (
         (None, {
             'fields': ('gallery','parent',)

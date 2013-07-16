@@ -20,7 +20,7 @@ class Gallery(models.Model):
 
     image = models.ImageField(_('image'), upload_to='porticus/gallery', blank=True)
 
-    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES)
+    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES, default=settings.PORTICUS_GALLERY_TEMPLATE_DEFAULT)
 
     priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
 
@@ -56,7 +56,7 @@ class Album(MPTTModel):
 
     image = models.ImageField(_('image'), upload_to='porticus/album', blank=True)
 
-    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES)
+    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_TEMPLATE_DEFAULT)
 
     priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
 

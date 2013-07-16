@@ -11,12 +11,9 @@ from porticus.models import Album
 class AlbumPlugin(CMSPlugin):
     """CMS Plugin for displaying a Album"""
 
-    album = models.ForeignKey(Album, verbose_name=_('album'),
-                                help_text=_('Album to display'))
+    album = models.ForeignKey(Album, verbose_name=_('album'), help_text=_('Album to display'))
 
-    template_name = models.CharField(_('template'), max_length=255,
-                                     help_text=_('Template used to render the plugin Album'),
-                                     choices=settings.PORTICUS_ALBUM_PLUGIN_TEMPLATE_CHOICES)
+    template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the plugin Album'), choices=settings.PORTICUS_ALBUM_PLUGIN_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_PLUGIN_TEMPLATE_DEFAULT)
 
     def __unicode__(self):
         return self.album.name
