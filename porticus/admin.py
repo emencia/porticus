@@ -44,6 +44,11 @@ class GalleryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 
 
+class RessourceInline(admin.StackedInline):
+    model = Ressource
+    ordering = ('priority', 'name')
+
+
 class AlbumAdmin(MPTTModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description', 'slug')
@@ -65,6 +70,9 @@ class AlbumAdmin(MPTTModelAdmin):
         }),
     )
     prepopulated_fields = {'slug': ('name', )}
+    inlines = [
+        RessourceInline,
+    ]
     mptt_level_indent = 25
 
     def ressources_count(self, album):
