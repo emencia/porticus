@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 
-from mptt.models import MPTTModel, TreeForeignKey
+from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
 
 class Gallery(models.Model):
@@ -67,9 +67,14 @@ class Album(MPTTModel):
     def __unicode__(self):
         return self.name
 
+    objects = TreeManager()
+
     @models.permalink
     def get_absolute_url(self):
         return ('porticus-album-detail', (self.gallery.slug, self.slug,))
+    
+    def get_published_children(self):
+        return self.get_children().filter(priority__gt=0)
 
     class Meta:
         #ordering = ('priority', 'name')

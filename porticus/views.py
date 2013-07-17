@@ -64,7 +64,7 @@ class GalleryDetailView(DetailListView):
     paginate_by = settings.PORTICUS_ALBUMS_PAGINATION
 
     def get_queryset(self):
-        return self.detail_object.album_set.all().filter(priority__gt=0).order_by('priority', 'name')
+        return self.detail_object.album_set.filter(priority__gt=0).order_by('priority', 'name')
     
     def get_template_names(self):
         return (self.detail_object.template_name,)
@@ -101,7 +101,7 @@ class AlbumDetailView(DetailListView):
         return super(AlbumDetailView, self).get_detail_object()
 
     def get_queryset(self):
-        return self.detail_object.ressource_set.all().filter(priority__gt=0).order_by('priority', 'name')
+        return self.detail_object.ressource_set.filter(priority__gt=0).order_by('priority', 'name')
 
     def get_context_data(self, **kwargs):
         kwargs.update({
