@@ -25,12 +25,16 @@ class DetailListView(SimpleListView):
     find a list object from his relations
     """
     detail_model = None
+    detail_slug = None
     context_parent_object_name = 'detail_object'
+
+    def get_detail_slug(self):
+        return self.detail_slug or self.kwargs.get('detail_slug')
 
     def get_detail_object(self):
         if self.detail_model is None:
             raise ImproperlyConfigured(u"%(cls)s's 'detail_model' class attribute must be defined " % {"cls": self.__class__.__name__})
-        return get_object_or_404(self.detail_model, slug=self.kwargs.get('detail_slug'), priority__gt=0)
+        return get_object_or_404(self.detail_model, slug=self.get_detail_slug(), priority__gt=0)
 
     def get(self, request, *args, **kwargs):
         self.detail_object = self.get_detail_object()
@@ -83,13 +87,17 @@ class GalleryTreeView(GalleryDetailView):
 
 class AlbumDetailView(DetailListView):
     detail_model = Album
+    parent_slug = None
     context_parent_object_name = 'album_object'
     
     model = Ressource
     paginate_by = settings.PORTICUS_RESSOURCES_PAGINATION
 
+    def get_parent_slug(self):
+        return self.parent_slug or self.kwargs.get('parent_slug')
+
     def get_detail_object(self):
-        self.gallery_object = get_object_or_404(Gallery, slug=self.kwargs.get('parent_slug'), priority__gt=0)
+        self.gallery_object = get_object_or_404(Gallery, slug=self.get_parent_slug(), priority__gt=0)
         return super(AlbumDetailView, self).get_detail_object()
 
     def get_queryset(self):
