@@ -45,7 +45,7 @@ class GalleryList(template.Node):
             if current_gallery:
                 # Assume this is slug
                 if isinstance(current_gallery, basestring):
-                    current_gallery = Gallery.objects.get(slug=current_gallery, priority__gt=0)
+                    current_gallery = Gallery.objects.get(slug=current_gallery, publish=True)
                 # Only accept Gallery model instance
                 elif not isinstance(current_gallery, Gallery):
                     raise template.TemplateSyntaxError, "You can only specify a Gallery instance or a slug"
@@ -61,7 +61,7 @@ class GalleryList(template.Node):
                 if resolved_var:
                     template_path = resolved_var
         
-        gallery_list = Gallery.published.all()
+        gallery_list = Gallery.publish.all()
         
         subcontext = {
             'object_list': gallery_list,
@@ -116,9 +116,9 @@ class AlbumFragment(template.Node):
         album_instance = self.instance_varname.resolve(context)
         # Assume this is slug
         if isinstance(album_instance, basestring):
-            album_instance = Album.objects.get(slug=album_instance, priority__gt=0)
+            album_instance = Album.objects.get(slug=album_instance, publish=True)
         # Get the album's ressources
-        ressources_list = album_instance.ressource_set.filter(priority__gt=0)
+        ressources_list = album_instance.ressource_set.filter(publish=True)
 
         # Resolve optional template path
         template_path = settings.PORTICUS_ALBUM_TEMPLATE_FRAGMENT

@@ -27,18 +27,18 @@ admin_image.allow_tags = True
 class GalleryAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('creation_date',)
-    list_editable = ('priority',)
-    list_display = (admin_image, 'name', 'priority')
+    list_filter = ('creation_date', 'publish')
+    list_editable = ('priority', 'publish', 'template_name')
+    list_display = (admin_image, 'name', 'publish', 'priority', 'template_name')
     fieldsets = (
         (None, {
             'fields': ('name', 'image')
         }),
         (None, {
-            'fields': ('description',),
+            'fields': ('publish', 'template_name', 'priority', 'slug')
         }),
         (None, {
-            'fields': ('template_name', 'priority', 'slug')
+            'fields': ('description',),
         }),
     )
     prepopulated_fields = {'slug': ('name', )}
@@ -52,9 +52,9 @@ class RessourceInline(admin.StackedInline):
 class AlbumAdmin(MPTTModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('creation_date', 'gallery')
-    list_editable = ('priority',)
-    list_display = ('name', 'slug', 'template_name', 'ressources_count', 'priority')
+    list_filter = ('creation_date', 'gallery', 'publish')
+    list_editable = ('priority', 'publish', 'template_name')
+    list_display = ('name', 'slug', 'publish', 'priority', 'template_name', 'ressources_count')
     fieldsets = (
         (None, {
             'fields': ('gallery','parent',)
@@ -63,10 +63,10 @@ class AlbumAdmin(MPTTModelAdmin):
             'fields': ('name', 'image',)
         }),
         (None, {
-            'fields': ('description',),
+            'fields': ('publish', 'template_name', 'priority', 'slug')
         }),
         (None, {
-            'fields': ('template_name', 'priority', 'slug')
+            'fields': ('description',),
         }),
     )
     prepopulated_fields = {'slug': ('name', )}
@@ -83,25 +83,25 @@ class AlbumAdmin(MPTTModelAdmin):
 class RessourceAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
     search_fields = ('name', 'description')
-    list_filter = ('file_type', 'creation_date', 'album')
-    list_editable = ('priority',)
-    list_display = (admin_image, 'album', 'name', 'file_type', 'file_weight', 'priority')
+    list_filter = ('file_type', 'creation_date', 'album', 'publish')
+    list_editable = ('priority', 'publish')
+    list_display = (admin_image, 'album', 'name', 'publish', 'priority', 'file_type', 'file_weight')
     fieldsets = (
         (None, {
             'fields': ('album',),
         }),
         (None, {
-            'fields': ('name', 'image', 'priority'),
+            'fields': ('publish', 'priority'),
         }),
         (None, {
-            'fields': ('description',),
+            'fields': ('name', 'image'),
         }),
         (_('File'), {
             'fields': ('file_type', 'file', 'file_url', 'file_weight'), 
             'description': _('You must fill one of these fields'),
         }),
         (None, {
-            'fields': (),
+            'fields': ('description',),
         }),
     )
 

@@ -34,7 +34,7 @@ class DetailListView(SimpleListView):
     def get_detail_object(self):
         if self.detail_model is None:
             raise ImproperlyConfigured(u"%(cls)s's 'detail_model' class attribute must be defined " % {"cls": self.__class__.__name__})
-        return get_object_or_404(self.detail_model, slug=self.get_detail_slug(), priority__gt=0)
+        return get_object_or_404(self.detail_model, slug=self.get_detail_slug(), publish=True)
 
     def get(self, request, *args, **kwargs):
         self.detail_object = self.get_detail_object()
@@ -64,7 +64,7 @@ class GalleryDetailView(DetailListView):
     paginate_by = settings.PORTICUS_ALBUMS_PAGINATION
 
     def get_queryset(self):
-        return self.detail_object.album_set.filter(priority__gt=0).order_by('priority', 'name')
+        return self.detail_object.album_set.filter(publish=True).order_by('priority', 'name')
     
     def get_template_names(self):
         return (self.detail_object.template_name,)
@@ -79,7 +79,7 @@ class GalleryTreeView(GalleryDetailView):
     template_name = "porticus/gallery_tree.html"
 
     def get_queryset(self):
-        return self.detail_object.album_set.filter(priority__gt=0)
+        return self.detail_object.album_set.filter(publish=True)
     
     def get_template_names(self):
         return (self.template_name,)
@@ -97,11 +97,11 @@ class AlbumDetailView(DetailListView):
         return self.parent_slug or self.kwargs.get('parent_slug')
 
     def get_detail_object(self):
-        self.gallery_object = get_object_or_404(Gallery, slug=self.get_parent_slug(), priority__gt=0)
+        self.gallery_object = get_object_or_404(Gallery, slug=self.get_parent_slug(), publish=True)
         return super(AlbumDetailView, self).get_detail_object()
 
     def get_queryset(self):
-        return self.detail_object.ressource_set.filter(priority__gt=0).order_by('priority', 'name')
+        return self.detail_object.ressource_set.filter(publish=True).order_by('priority', 'name')
 
     def get_context_data(self, **kwargs):
         kwargs.update({

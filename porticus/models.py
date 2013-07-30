@@ -10,6 +10,10 @@ from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
+PUBLISHED_CHOICES = (
+    (True, _('Published')),
+    (False, _('Unpublished')),
+)
 
 class Gallery(models.Model):
     """Model representing a gallery"""
@@ -22,7 +26,9 @@ class Gallery(models.Model):
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES, default=settings.PORTICUS_GALLERY_TEMPLATE_DEFAULT)
 
-    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
+    publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
+    
+    priority = models.IntegerField(_('display priority'), default=100)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
@@ -58,7 +64,9 @@ class Album(MPTTModel):
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_TEMPLATE_DEFAULT)
 
-    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
+    publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
+    
+    priority = models.IntegerField(_('display priority'), default=100)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
@@ -74,7 +82,7 @@ class Album(MPTTModel):
         return ('porticus-album-detail', (self.gallery.slug, self.slug,))
     
     def get_published_children(self):
-        return self.get_children().filter(priority__gt=0)
+        return self.get_children().filter(publish=True)
 
     class Meta:
         #ordering = ('priority', 'name')
@@ -106,7 +114,9 @@ class Ressource(models.Model):
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
-    priority = models.IntegerField(_('display priority'), default=100, help_text=_('Set this value to 0 will hide the item'))
+    publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
+    
+    priority = models.IntegerField(_('display priority'), default=100)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
