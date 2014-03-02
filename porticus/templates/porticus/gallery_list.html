@@ -1,10 +1,9 @@
 {% extends "porticus/base.html" %}
 {% load i18n %}
-{% load url from future %}
 
 {% block head_title %}{% trans "Galleries" %} - {{ block.super }}{% endblock %}
 
-{% block content %}<div class="row">
+{% block porticus_content %}<div class="row">
     <h2>{% trans "Galleries" %}</h2>
 
     <ul>

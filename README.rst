@@ -8,13 +8,19 @@ Yet another File gallery for Django.
 
 **Galleries** contains **Albums** that contains **Ressources** and ressources are your files items. Usually used like an image gallery, you should also use it like a download center for many file types.
 
-Note that Albums make usage of `mptt`_, so Albums can have album children. Shipped templates are basic, they don't manage albums tree.
+Note that Albums make usage of `mptt`_, so Albums can have album children. Shipped templates are basics.
 
 Requires
 ********
 
-* `mptt`_
+* Django >= 1.5;
+* `mptt`_;
 *  `sorl.thumbnail`_;
+
+Optionnal
+---------
+
+*  `django-cms`_ to use Porticus with the cms plugin;
 
 Install
 *******
@@ -35,6 +41,6 @@ In your settings.INSTALLED_APPS : ::
     'sorl.thumbnail',
     'porticus',
     
-And if you want also to use it within DjangoCMS : ::
+And if you want also to use its plugin within `django-cms`_ : ::
 
     'porticus.cmsplugin_porticus',

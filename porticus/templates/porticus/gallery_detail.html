@@ -1,10 +1,9 @@
 {% extends "porticus/base.html" %}
 {% load i18n thumbnail %}
-{% load url from future %}
 
 {% block head_title %}{{ gallery_object.name }} - {{ block.super }}{% endblock %}
 
-{% block base_content %}
+{% block porticus_content %}
 <div class="row">
     <div class="gallery-detail-{{ gallery_object.id }}">
         <h3>{{ gallery_object.name }}</h3>

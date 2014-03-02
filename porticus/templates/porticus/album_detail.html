@@ -1,14 +1,9 @@
 {% extends "porticus/base.html" %}
 {% load i18n thumbnail %}
-{% load url from future %}
 
 {% block head_title %}{{ album_object.name }} - {{ block.super }}{% endblock %}
 
-{% block foot_more_js %}<script type="text/javascript">
-    $('.popup-link').magnificPopup({type: 'image'});
-</script>{% endblock %}
-
-{% block base_content %}
+{% block porticus_content %}
 <div class="row">
     <div class="album-detail-{{ album_object.id }}">
         <h3>{{ album_object.name }}</h3>
