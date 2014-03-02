@@ -13,7 +13,7 @@
         
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
-            <div class="three columns item equalized-item">
+            <div class="large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
                 {% if ressource.file_url %}
                     {% ifequal ressource.file_type 0 %}
                         <a href="{{ ressource.file_url }}" target="_blank">

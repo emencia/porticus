@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="row">
+    <div class="gallery-detail-{{ gallery_instance.id }}">
+        <h3>{{ gallery_instance.name }}</h3>
+        {% if gallery_instance.description %}
+            <p>{{ gallery_instance.description }}</p>
+        {% endif %}
+        
+        <div class="album-grid-aside equal-heights">{% for album in album_list %}
+        {% spaceless %}
+            <div class="small-6 large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
+            <a href="{% url 'porticus-album-detail' parent_slug=gallery_instance.slug detail_slug=album.slug %}">
+                <div class="large-6 columns thumb">
+                    {% if album.image  %}
+                        {% thumbnail album.image "105x80" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
+                    {% endif %}
+                </div>
+                <div class="large-6 columns content">
+                    <p>{{ album.name }}</p>
+                </div>
+            </a>
+            </div>
+        {% endspaceless %}
+        {% endfor %}</div>
+    </div>
+</div>
