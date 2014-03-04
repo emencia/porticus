@@ -101,7 +101,7 @@ class AlbumDetailView(DetailListView):
         return super(AlbumDetailView, self).get_detail_object()
 
     def get_queryset(self):
-        return self.detail_object.ressource_set.filter(publish=True).order_by('priority', 'name')
+        return self.detail_object.get_published_ressources()
 
     def get_context_data(self, **kwargs):
         kwargs.update({

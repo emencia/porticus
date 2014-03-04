@@ -5,6 +5,7 @@ Common templates tags for porticus
 from django.conf import settings
 from django import template
 from django.utils.safestring import mark_safe
+from django.shortcuts import get_object_or_404
 
 from porticus.models import Gallery, Album
 
@@ -154,3 +155,18 @@ def do_porticus_album_fragment(parser, token):
         return AlbumFragment(*args[1:])
 
 do_porticus_album_fragment.is_safe = True
+
+def porticus_album_list(gallery_instance, level=0):
+    """
+    Return a queryset list from a Gallery, this is a flat list of albums, not recursive
+    
+    Usage : ::
+    
+        {% porticus_album_list [Gallery slug or instance] [Optional level] %}
+    """
+    if isinstance(gallery_instance, basestring):
+        return get_object_or_404(Gallery, slug=gallery_instance, publish=True).album_set.filter(level=0)
+    
+    return gallery_instance.album_set.filter(level=0)
+
+register.assignment_tag(porticus_album_list)

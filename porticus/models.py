@@ -83,6 +83,12 @@ class Album(MPTTModel):
     
     def get_published_children(self):
         return self.get_children().filter(publish=True)
+    
+    def get_published_descendants(self):
+        return self.get_descendants().filter(publish=True)
+    
+    def get_published_ressources(self):
+        return self.ressource_set.filter(publish=True).order_by('priority', 'name')
 
     class Meta:
         #ordering = ('priority', 'name')
