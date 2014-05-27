@@ -37,9 +37,9 @@ class Gallery(models.Model):
     objects = models.Manager()
     published = GalleryPublishedManager()
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('porticus-gallery-detail', (self.slug,))
+    #@models.permalink
+    #def get_absolute_url(self):
+        #return ('porticus-gallery-detail', (self.slug,))
 
     def __unicode__(self):
         return self.name
@@ -77,9 +77,9 @@ class Album(MPTTModel):
 
     objects = TreeManager()
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('porticus-album-detail', (self.gallery.slug, self.slug,))
+    #@models.permalink
+    #def get_absolute_url(self):
+        #return ('porticus-album-detail', (self.gallery.slug, self.slug,))
     
     def get_published_children(self):
         return self.get_children().filter(publish=True)

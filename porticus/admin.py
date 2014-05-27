@@ -30,6 +30,8 @@ class GalleryAdmin(admin.ModelAdmin):
     list_filter = ('creation_date', 'publish')
     list_editable = ('priority', 'publish', 'template_name')
     list_display = (admin_image, 'name', 'publish', 'priority', 'template_name')
+    list_display_links = (admin_image, 'name')
+    prepopulated_fields = {'slug': ('name', )}
     fieldsets = (
         (None, {
             'fields': ('name', 'image')
@@ -41,7 +43,6 @@ class GalleryAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
     )
-    prepopulated_fields = {'slug': ('name', )}
 
 
 class RessourceInline(admin.StackedInline):
