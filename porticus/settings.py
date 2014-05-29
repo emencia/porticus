@@ -1,6 +1,8 @@
 """
 Settings for porticus
 """
+gettext = lambda s: s
+
 PORTICUS_GALLERIES_PAGINATION = PORTICUS_ALBUMS_PAGINATION = PORTICUS_RESSOURCES_PAGINATION = 16
 
 # Templates choices in the admin
@@ -26,3 +28,11 @@ PORTICUS_ALBUM_PLUGIN_TEMPLATE_DEFAULT = PORTICUS_ALBUM_PLUGIN_TEMPLATE_CHOICES[
 # Templates for templatetags
 PORTICUS_ALBUM_TEMPLATE_FRAGMENT = 'porticus/templatetags/album_detail_fragment.html'
 PORTICUS_GALLERIES_TEMPLATE_FRAGMENT = 'porticus/templatetags/gallery_list_fragment.html'
+
+# Ressource file types
+PORTICUS_RESSOURCE_FILETYPE_CHOICES = (
+    (0, gettext('Binary')),
+    (1, gettext('Image')),
+    (2, gettext('Youtube (only on file url)')),
+)
+PORTICUS_RESSOURCE_FILETYPE_DEFAULT = 1

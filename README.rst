@@ -1,3 +1,4 @@
+.. _South: http://south.readthedocs.org/en/latest/
 .. _mptt: https://github.com/django-mptt/django-mptt/
 .. _sorl.thumbnail: https://github.com/sorl/sorl-thumbnail
 
@@ -7,6 +8,8 @@ porticus
 Yet another File gallery for Django.
 
 **Galleries** contains **Albums** that contains **Ressources** and ressources are your files items. Usually used like an image gallery, you should also use it like a download center for many file types.
+
+Galleries and Albums has thumbnails, Ressources has thumbnail and a file but the file can be a real uploaded file on your server or jsut an url to link to.
 
 Note that Albums make usage of `mptt`_, so Albums can have album children. Shipped templates are basics.
 
@@ -20,7 +23,8 @@ Requires
 Optionnal
 ---------
 
-*  `django-cms`_ to use Porticus with the cms plugin;
+* `django-cms`_ to use Porticus with the cms plugin;
+* `South`_ migration is supported. This is not required, but strongly recommended for future updates;
 
 Install
 *******

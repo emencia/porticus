@@ -101,12 +101,6 @@ class Album(MPTTModel):
 
 class Ressource(models.Model):
     """Model for representing a ressource"""
-    FILETYPE_CHOICES = (
-        (0, _('Binary')),
-        (1, _('Image')),
-        (2, _('Text')),
-    )
-    
     album = models.ForeignKey(Album)
 
     name = models.CharField(_('name'), max_length=250)
@@ -115,7 +109,7 @@ class Ressource(models.Model):
     
     image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
 
-    file_type = models.IntegerField(_('file type'), choices=FILETYPE_CHOICES)
+    file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES)#, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
     file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
@@ -138,7 +132,7 @@ class Ressource(models.Model):
 
     def clean(self):
         if not self.get_file:
-            raise ValidationError(_('Please fill a file or a file url'))
+            raise ValidationError(_('Please upload a file or give a file url'))
 
     def __unicode__(self):
         return self.name
