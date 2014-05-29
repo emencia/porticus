@@ -109,7 +109,7 @@ class Ressource(models.Model):
     
     image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
 
-    file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES)#, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
+    file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
     file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
