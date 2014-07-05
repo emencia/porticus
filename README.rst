@@ -48,3 +48,21 @@ In your settings.INSTALLED_APPS : ::
 And if you want also to use its plugin within `django-cms`_ : ::
 
     'porticus.cmsplugin_porticus',
+
+Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in your project sitemap like so : ::
+
+    from django.conf.urls import patterns
+    from porticus.sitemaps import PorticusGallerySitemap, PorticusAlbumSitemap, PorticusRessourceSitemap
+
+    sitemaps = {
+        'galleries': PorticusGallerySitemap,
+        'albums': PorticusAlbumSitemap,
+        'photos': PorticusRessourceSitemap,
+    }
+
+    urlpatterns = patterns('',
+        # the sitemap
+        (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps})
+    )
+
+See the Django documentation about Sitemaps for more details.

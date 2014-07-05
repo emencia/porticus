@@ -6,7 +6,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
+from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
@@ -76,6 +76,7 @@ class Album(MPTTModel):
         return self.name
 
     objects = TreeManager()
+    published = AlbumPublishedManager()
 
     #@models.permalink
     #def get_absolute_url(self):
@@ -91,7 +92,6 @@ class Album(MPTTModel):
         return self.ressource_set.filter(publish=True).order_by('priority', 'name')
 
     class Meta:
-        #ordering = ('priority', 'name')
         verbose_name = _('album')
         verbose_name_plural = _('albums')
 
