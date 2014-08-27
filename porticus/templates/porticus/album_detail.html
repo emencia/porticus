@@ -10,7 +10,8 @@
         {% if album_object.description %}
             <p>{{ album_object.description }}</p>
         {% endif %}
-        
+
+
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
             <div class="large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
@@ -21,13 +22,12 @@
                         <a href="{{ ressource.file_url }}">
                     {% endifequal %}
                 {% else %}
-                    <a href="{{ ressource.file.url }}" class="popup-link">
+                    <a href="{{ ressource.file }}" class="popup-link">
                 {% endif %}
                 
-                {% if ressource.image %}
-                    {% thumbnail ressource.image "105x105" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
-                {% endif %}
-                
+                    <img src="{{ ressource.file }}" alt="" style="height:150px;
+                                                                    width:150px;">
+
                     <h4>{{ ressource.name }}</h4>
                 </a>
                 
