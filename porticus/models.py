@@ -11,6 +11,9 @@ from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 from filebrowser.fields import FileBrowseField
 
+from tagging.fields import TagField
+from tagging.models import Tag
+
 import os
 
 
@@ -38,12 +41,17 @@ class Gallery(models.Model):
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
+    tags = TagField(_('tags'))
+
     objects = models.Manager()
     published = GalleryPublishedManager()
 
     #@models.permalink
     #def get_absolute_url(self):
         #return ('porticus-gallery-detail', (self.slug,))
+
+    def get_tags(self):
+        return Tag.objects.get_for_object(self)
 
     def __unicode__(self):
         return self.name
@@ -76,6 +84,8 @@ class Album(MPTTModel):
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
+    tags = TagField(_('tags'))
+
     def __unicode__(self):
         return self.name
 
@@ -85,7 +95,10 @@ class Album(MPTTModel):
     #@models.permalink
     #def get_absolute_url(self):
         #return ('porticus-album-detail', (self.gallery.slug, self.slug,))
-    
+
+    def get_tags(self):
+        return Tag.objects.get_for_object(self)
+
     def get_published_children(self):
         return self.get_children().filter(publish=True)
     
@@ -110,14 +123,13 @@ class Ressource(models.Model):
     name = models.CharField(_('name'), max_length=250)
 
     description = models.TextField(_('description'), blank=True)
-    
+
     image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
 
     file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
-    file = FileBrowseField(_('file'), max_length=400, directory="porticus/ressources/files", blank=True, null=True)
+    file = FileBrowseField(_('file'), max_length=400, directory="porticus/ressources/files", blank=True, null=False)
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
-
 
     publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
 
@@ -125,8 +137,13 @@ class Ressource(models.Model):
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
+    tags = TagField(_('tags'))
+
     objects = models.Manager()
     published = RessourcePublishedManager()
+
+    def get_tags(self):
+        return Tag.objects.get_for_object(self)
 
     @property
     def get_file(self):
@@ -143,7 +160,7 @@ class Ressource(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        path = settings.MEDIA_ROOT + str(self.file)[6:]
+        path = os.path.join(settings.PROJECT_PATH, str(self.file).lstrip('/'))
         try:
             if not self.file:
                 raise OSError
@@ -152,7 +169,7 @@ class Ressource(models.Model):
                 if "_thumb" not in img and "_small" not in img\
                     and "_big" not in img and "_medium" not in img:
                     new_doc = Ressource(album=self.album, name=img,
-                                        file_type=1,
+                                        file_type=1, tags=self.tags,
                                         image=str(self.file) + img,
                                         file=str(self.file) + img)
                     new_doc.save()

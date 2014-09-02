@@ -17,14 +17,14 @@
             {% else %}
                 <a href="{{ ressource.file.url }}" class="popup-link">
             {% endif %}
-            
+
             {% if ressource.image %}
                 {% thumbnail ressource.image "105x105" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
             {% endif %}
-            
+
                 <h4>{{ ressource.name }}</h4>
             </a>
-            
+
             {% if ressource.description %}
             <div class="description">
                 <p>{{ ressource.description }}</p>

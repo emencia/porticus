@@ -1,5 +1,6 @@
 {% extends "porticus/base.html" %}
 {% load i18n thumbnail %}
+{% load tagging_tags %}
 
 {% block head_title %}{{ album_object.name }} - {{ block.super }}{% endblock %}
 
@@ -11,6 +12,14 @@
             <p>{{ album_object.description }}</p>
         {% endif %}
 
+        <div class="panel callout radius">
+            {% tag_cloud_for_model porticus.Ressource as tags with steps=6 min_count=1 distribution=log %}
+            {% for tag in tags %}
+                <a href="/galleries/tag/{{tag.name|slugify}}/">
+                    {{ tag.name }}
+                </a>
+            {% endfor %}
+        </div>
 
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}

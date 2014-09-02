@@ -37,7 +37,7 @@ class GalleryAdmin(admin.ModelAdmin):
             'fields': ('name', 'image')
         }),
         (None, {
-            'fields': ('publish', 'template_name', 'priority', 'slug')
+            'fields': ('publish', 'template_name', 'priority', 'slug', 'tags')
         }),
         (None, {
             'fields': ('description',),
@@ -64,7 +64,7 @@ class AlbumAdmin(MPTTModelAdmin):
             'fields': ('name', 'image',)
         }),
         (None, {
-            'fields': ('publish', 'template_name', 'priority', 'slug')
+            'fields': ('publish', 'template_name', 'priority', 'slug', 'tags')
         }),
         (None, {
             'fields': ('description',),
@@ -95,7 +95,7 @@ class RessourceAdmin(admin.ModelAdmin):
             'fields': ('publish', 'priority'),
         }),
         (None, {
-            'fields': ('name', 'image'),
+            'fields': ('name', 'image', 'tags'),
         }),
         (_('File'), {
             'fields': ('file_type', 'file', 'file_url', 'file_weight'), 
