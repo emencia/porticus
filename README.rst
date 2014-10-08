@@ -1,6 +1,8 @@
+.. _DjangoCMS: https://www.django-cms.org
 .. _South: http://south.readthedocs.org/en/latest/
 .. _mptt: https://github.com/django-mptt/django-mptt/
 .. _sorl.thumbnail: https://github.com/sorl/sorl-thumbnail
+.. _django-tagging: https://github.com/brosner/django-tagging
 
 porticus
 ========
@@ -9,7 +11,7 @@ Yet another File gallery for Django.
 
 **Galleries** contains **Albums** that contains **Ressources** and ressources are your files items. Usually used like an image gallery, you should also use it like a download center for many file types.
 
-Galleries and Albums has thumbnails, Ressources has thumbnail and a file but the file can be a real uploaded file on your server or jsut an url to link to.
+Galleries and Albums have thumbnails, Ressources have a thumbnail and a file but the file can be a real uploaded file on your server or just an url to link to. Also Ressources have optional tags.
 
 Note that Albums make usage of `mptt`_, so Albums can have album children. Shipped templates are basics.
 
@@ -18,12 +20,13 @@ Requires
 
 * Django >= 1.5;
 * `mptt`_;
-*  `sorl.thumbnail`_;
+* `sorl.thumbnail`_;
+* `django-tagging`_;
 
-Optionnal
+Optional
 ---------
 
-* `django-cms`_ to use Porticus with the cms plugin;
+* `DjangoCMS`_ to use Porticus with the cms plugin;
 * `South`_ migration is supported. This is not required, but strongly recommended for future updates;
 
 Install
@@ -39,13 +42,18 @@ Or to point out a specific gallery : ::
 
 Then add the content of ``porticus.settings`` in your settings file.
 
-In your settings.INSTALLED_APPS : ::
+In your ``INSTALLED_APPS`` setting : ::
     
-    'mptt',
-    'sorl.thumbnail',
-    'porticus',
-    
-And if you want also to use its plugin within `django-cms`_ : ::
+    INSTALLED_APPS = (
+        ...
+        'mptt',
+        'sorl.thumbnail',
+        'porticus',
+        'tagging',
+        ...
+    )
+
+Also if you want to use its plugin within `DjangoCMS`_ add this to ``INSTALLED_APPS`` setting : ::
 
     'porticus.cmsplugin_porticus',
 
@@ -65,4 +73,4 @@ Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in 
         (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps})
     )
 
-See the Django documentation about Sitemaps for more details.
+See the `Django documentation about Sitemaps <https://docs.djangoproject.com/en/1.7/ref/contrib/sitemaps/>`_ for more details.

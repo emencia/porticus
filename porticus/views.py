@@ -5,10 +5,11 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ImproperlyConfigured
 
-from django.views.generic.base import TemplateResponseMixin, View
+from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 from django.views.generic.list import BaseListView
 
 from porticus.models import Gallery, Album, Ressource
+from tagging.models import Tag, TaggedItem
 
 
 class SimpleListView(TemplateResponseMixin, BaseListView):
@@ -89,7 +90,7 @@ class AlbumDetailView(DetailListView):
     detail_model = Album
     parent_slug = None
     context_parent_object_name = 'album_object'
-    
+
     model = Ressource
     paginate_by = settings.PORTICUS_RESSOURCES_PAGINATION
 
@@ -108,6 +109,28 @@ class AlbumDetailView(DetailListView):
             'gallery_object': self.gallery_object,
         })
         return super(AlbumDetailView, self).get_context_data(**kwargs)
-    
+
     def get_template_names(self):
         return (self.detail_object.template_name,)
+
+
+class TagsView(TemplateView):
+    """View for every tags"""
+    template_name = 'porticus/tags.html'
+
+
+class TagDetailView(TemplateView):
+    """View for one tag"""
+    template_name = 'porticus/with_tag.html'
+
+    def get_query_tag(self):
+        return Tag.objects.get(name=self.kwargs['tags'])
+
+    def gallery(self):
+        return TaggedItem.objects.get_by_model(Gallery, self.get_query_tag())
+
+    def album(self):
+        return TaggedItem.objects.get_by_model(Album, self.get_query_tag())
+
+    def ressource(self):
+        return TaggedItem.objects.get_by_model(Ressource, self.get_query_tag())

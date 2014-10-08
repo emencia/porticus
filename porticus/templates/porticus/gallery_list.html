@@ -1,10 +1,20 @@
 {% extends "porticus/base.html" %}
 {% load i18n %}
+{% load tagging_tags %}
 
 {% block head_title %}{% trans "Galleries" %} - {{ block.super }}{% endblock %}
 
 {% block porticus_content %}<div class="row">
     <h2>{% trans "Galleries" %}</h2>
+
+    <div class="panel callout radius">
+        {% tag_cloud_for_model porticus.Gallery as tags with steps=6 min_count=1 distribution=log %}
+        {% for tag in tags %}
+            <a href="/galleries/tag/{{tag.name|slugify}}/">
+                {{ tag.name }}
+            </a>
+        {% endfor %}
+    </div>
 
     <ul>
         {% for object in object_list %}
