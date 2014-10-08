@@ -37,7 +37,7 @@ class GalleryAdmin(admin.ModelAdmin):
             'fields': ('name', 'image')
         }),
         (None, {
-            'fields': ('publish', 'template_name', 'priority', 'slug', 'tags')
+            'fields': ('publish', 'template_name', 'priority', 'slug')
         }),
         (None, {
             'fields': ('description',),
@@ -64,7 +64,7 @@ class AlbumAdmin(MPTTModelAdmin):
             'fields': ('name', 'image',)
         }),
         (None, {
-            'fields': ('publish', 'template_name', 'priority', 'slug', 'tags')
+            'fields': ('publish', 'template_name', 'priority', 'slug')
         }),
         (None, {
             'fields': ('description',),

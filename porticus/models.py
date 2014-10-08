@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
-from filebrowser.fields import FileBrowseField
+#from filebrowser.fields import FileBrowseField
 
 from tagging.fields import TagField
 from tagging.models import Tag
@@ -40,8 +40,6 @@ class Gallery(models.Model):
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
-
-    tags = TagField(_('tags'))
 
     objects = models.Manager()
     published = GalleryPublishedManager()
@@ -84,8 +82,6 @@ class Album(MPTTModel):
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
-    tags = TagField(_('tags'))
-
     def __unicode__(self):
         return self.name
 
@@ -127,7 +123,8 @@ class Ressource(models.Model):
     image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
 
     file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
-    file = FileBrowseField(_('file'), max_length=400, directory="porticus/ressources/files", blank=True, null=False)
+    #file = FileBrowseField(_('file'), max_length=400, directory="porticus/ressources/files", blank=True, null=False)
+    file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
@@ -148,9 +145,11 @@ class Ressource(models.Model):
     @property
     def get_file(self):
         try:
-            return self.file_url or self.file
+            #return self.file_url or self.file
+            return self.file_url or self.file.url
         except ValueError:
             return None
+
 
     def clean(self):
         if not self.get_file:
@@ -159,22 +158,22 @@ class Ressource(models.Model):
     def __unicode__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        path = os.path.join(settings.PROJECT_PATH, str(self.file).lstrip('/'))
-        try:
-            if not self.file:
-                raise OSError
-            img_lst = os.listdir(path)
-            for img in img_lst:
-                if "_thumb" not in img and "_small" not in img\
-                    and "_big" not in img and "_medium" not in img:
-                    new_doc = Ressource(album=self.album, name=img,
-                                        file_type=1, tags=self.tags,
-                                        image=str(self.file) + img,
-                                        file=str(self.file) + img)
-                    new_doc.save()
-        except OSError:
-            super(Ressource, self).save(*args, **kwargs)
+    #def save(self, *args, **kwargs):
+        #path = os.path.join(settings.PROJECT_PATH, str(self.file).lstrip('/'))
+        #try:
+            #if not self.file:
+                #raise OSError
+            #img_lst = os.listdir(path)
+            #for img in img_lst:
+                #if "_thumb" not in img and "_small" not in img\
+                    #and "_big" not in img and "_medium" not in img:
+                    #new_doc = Ressource(album=self.album, name=img,
+                                        #file_type=1, tags=self.tags,
+                                        #image=str(self.file) + img,
+                                        #file=str(self.file) + img)
+                    #new_doc.save()
+        #except OSError:
+            #super(Ressource, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-priority', 'name')

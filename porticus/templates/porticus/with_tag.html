@@ -1,42 +1,15 @@
 {% extends "porticus/base.html" %}
-{% load i18n %}
-{% load tagging_tags %}
+{% load i18n tagging_tags %}
 
 {% block porticus_content %}
 <h1>Tags</h1>
 <div class="row">
-<table class="small-12 columns">
-  <thead>
-    <tr>
-      <th class="small-4 columns">Gallery tags</th>
-      <th class="small-4 columns">Album tags</th>
-      <th class="small-4 columns">Ressource tags</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="small-4 columns">
-        {% for tag in view.gallery %}
-            <span class="tag-{{tag.font_size|add:"2"}}">
-                <a href="/galleries/{{tag.name|slugify}}/">{{tag.name}}</a>
-            </span> 
-        {% endfor %}
-      </td>
-      <td class="small-4 columns">
-        {% for tag in view.album %}
-            <span class="tag-{{tag.font_size|add:"2"}}">
-                <a href="/galleries/{{tag.gallery|slugify}}/{{tag.name|slugify}}/">{{tag.name}}</a>
-            </span> 
-        {% endfor %}
-      </td>
-      <td class="small-4 columns">
+    <div class="small-12 columns">
         {% for tag in view.ressource %}
-            <span class="tag-{{tag.font_size|add:"2"}}">
-                <a href="{{ tag.file }}">{{tag.name}}</a>
+            <span class="tag-{{ tag.font_size|add:"2" }}">
+                <a href="{{ tag.file }}">{{ tag.name }}</a>
             </span> 
         {% endfor %}
-      </td>
-    </tr>
-    </tbody>
-</table>
+    </div>
+</div>
 {% endblock %}

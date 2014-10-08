@@ -12,14 +12,14 @@
             <p>{{ album_object.description }}</p>
         {% endif %}
 
+        {% tag_cloud_for_model porticus.Ressource as tags with steps=6 min_count=1 distribution=log %}
+        {% if tags %}
         <div class="panel callout radius">
-            {% tag_cloud_for_model porticus.Ressource as tags with steps=6 min_count=1 distribution=log %}
             {% for tag in tags %}
-                <a href="/galleries/tag/{{tag.name|slugify}}/">
-                    {{ tag.name }}
-                </a>
+                <a href="/galleries/tag/{{ tag.name|slugify }}/">{{ tag.name }}</a>
             {% endfor %}
         </div>
+        {% endif %}
 
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
@@ -31,12 +31,13 @@
                         <a href="{{ ressource.file_url }}">
                     {% endifequal %}
                 {% else %}
-                    <a href="{{ ressource.file }}" class="popup-link">
+                    <a href="{{ ressource.file.url }}" class="popup-link">
                 {% endif %}
                 
-                    <img src="{{ ressource.file }}" alt="" style="height:150px;
-                                                                    width:150px;">
-
+                {% if ressource.image %}
+                    {% thumbnail ressource.image "105x105" as im %}<img src="{{ im.url }}" alt="">{% endthumbnail %}
+                {% endif %}
+                
                     <h4>{{ ressource.name }}</h4>
                 </a>
                 

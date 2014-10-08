@@ -12,28 +12,6 @@ from porticus.models import Gallery, Album, Ressource
 from tagging.models import Tag, TaggedItem
 
 
-class TagsView(TemplateView):
-    """View for every tags"""
-    template_name = 'porticus/tags.html'
-
-
-class TagDetailView(TemplateView):
-    """View for one tag"""
-    template_name = 'porticus/with_tag.html'
-
-    def get_query_tag(self):
-        return Tag.objects.get(name=self.kwargs['tags'])
-
-    def gallery(self):
-        return TaggedItem.objects.get_by_model(Gallery, self.get_query_tag())
-
-    def album(self):
-        return TaggedItem.objects.get_by_model(Album, self.get_query_tag())
-
-    def ressource(self):
-        return TaggedItem.objects.get_by_model(Ressource, self.get_query_tag())
-
-
 class SimpleListView(TemplateResponseMixin, BaseListView):
     """
     Like generic.ListView but use only ``get_template`` to find template and not an
@@ -134,3 +112,25 @@ class AlbumDetailView(DetailListView):
 
     def get_template_names(self):
         return (self.detail_object.template_name,)
+
+
+class TagsView(TemplateView):
+    """View for every tags"""
+    template_name = 'porticus/tags.html'
+
+
+class TagDetailView(TemplateView):
+    """View for one tag"""
+    template_name = 'porticus/with_tag.html'
+
+    def get_query_tag(self):
+        return Tag.objects.get(name=self.kwargs['tags'])
+
+    def gallery(self):
+        return TaggedItem.objects.get_by_model(Gallery, self.get_query_tag())
+
+    def album(self):
+        return TaggedItem.objects.get_by_model(Album, self.get_query_tag())
+
+    def ressource(self):
+        return TaggedItem.objects.get_by_model(Ressource, self.get_query_tag())
