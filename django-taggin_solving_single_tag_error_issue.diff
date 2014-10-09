@@ -1,0 +1,15 @@
+diff --git a/apps/django-tagging/tagging/models.py b/apps/django-tagging/tagging/models.py
+index d43f22d..1dfbef7 100644
+--- a/apps/django-tagging/tagging/models.py
++++ b/apps/django-tagging/tagging/models.py
+@@ -281,10 +281,6 @@ class TaggedItemManager(models.Manager):
+             # No existing tags were given
+             queryset, model = get_queryset_and_model(queryset_or_model)
+             return model._default_manager.none()
+-        elif tag_count == 1:
+-            # Optimisation for single tag - fall through to the simpler
+-            # query below.
+-            tag = tags[0]
+         else:
+             return self.get_intersection_by_model(queryset_or_model, tags)
+ 

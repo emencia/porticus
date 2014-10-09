@@ -1,5 +1,6 @@
 include MANIFEST.in
 include LICENCE.txt
 include README.rst
+include django-taggin_solving_single_tag_error_issue.diff
 recursive-include porticus/templates *
 recursive-include porticus/locale *

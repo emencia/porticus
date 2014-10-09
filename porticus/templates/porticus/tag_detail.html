@@ -1,23 +1,10 @@
 {% extends "porticus/base.html" %}
 {% load i18n thumbnail tagging_tags %}
 
-{% block head_title %}{{ album_object.name }} - {{ block.super }}{% endblock %}
-
 {% block porticus_content %}
 <div class="row">
-    <div class="album-detail-{{ album_object.id }}">
-        <h3>{{ album_object.name }}</h3>
-        {% if album_object.description %}
-            <p>{{ album_object.description }}</p>
-        {% endif %}
-
-        {% if ressources_tags %}
-            <div class="panel callout radius cloud-tags">
-                {% for tag in ressources_tags %}
-                    <a class="tag-size-{{ tag.font_size }}" href="{% url 'porticus-album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
-                {% endfor %}
-            </div>
-        {% endif %}
+    <div class="tag-detail">
+        <h3>Tag: {{ tag_object.name }}</h3>
 
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
@@ -57,4 +44,4 @@
         </ul>{% endif %}
     </div>
 </div>
-{% endblock%}
+{% endblock %}

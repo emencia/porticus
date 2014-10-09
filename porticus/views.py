@@ -9,8 +9,9 @@ from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 from django.views.generic.list import BaseListView
 
 from porticus.models import Gallery, Album, Ressource
-from tagging.models import Tag, TaggedItem
 
+from tagging.models import Tag, TaggedItem
+from tagging.utils import calculate_cloud
 
 class SimpleListView(TemplateResponseMixin, BaseListView):
     """
@@ -20,32 +21,37 @@ class SimpleListView(TemplateResponseMixin, BaseListView):
     pass
 
 
-class DetailListView(SimpleListView):
+class AlbumConfinementMixin(object):
     """
-    Like SimpleListView but require a detail object model that will be used to 
-    find a list object from his relations
+    Mixin that include methods to confine a view that get objects from a specific Gallery+Album
+    
+    You still have to load objects yourself with method ``get_gallery_object`` and ``get_album_object`` 
+    in your get/post/whatever view methods.
     """
-    detail_model = None
-    detail_slug = None
-    context_parent_object_name = 'detail_object'
+    gallery_slug = None
+    album_slug = None
+    gallery_object = None
+    album_object = None
+    gallery_object = None
 
-    def get_detail_slug(self):
-        return self.detail_slug or self.kwargs.get('detail_slug')
+    def get_gallery_slug(self):
+        return self.gallery_slug or self.kwargs.get('gallery_slug')
 
-    def get_detail_object(self):
-        if self.detail_model is None:
-            raise ImproperlyConfigured(u"%(cls)s's 'detail_model' class attribute must be defined " % {"cls": self.__class__.__name__})
-        return get_object_or_404(self.detail_model, slug=self.get_detail_slug(), publish=True)
+    def get_album_slug(self):
+        return self.album_slug or self.kwargs.get('album_slug')
 
-    def get(self, request, *args, **kwargs):
-        self.detail_object = self.get_detail_object()
-        return super(DetailListView, self).get(request, *args, **kwargs)
+    def get_gallery_object(self):
+        return get_object_or_404(Gallery, slug=self.get_gallery_slug(), publish=True)
+
+    def get_album_object(self):
+        return get_object_or_404(Album, slug=self.get_album_slug(), publish=True)
 
     def get_context_data(self, **kwargs):
-        kwargs.update({
-            self.context_parent_object_name: self.detail_object,
-        })
-        return super(DetailListView, self).get_context_data(**kwargs)
+        if self.album_object:
+            kwargs['album_object'] = self.album_object
+        if self.gallery_object:
+            kwargs['gallery_object'] = self.gallery_object
+        return super(AlbumConfinementMixin, self).get_context_data(**kwargs)
 
 
 class GalleryListView(SimpleListView):
@@ -57,18 +63,19 @@ class GalleryListView(SimpleListView):
     template_name = "porticus/gallery_list.html"
 
 
-class GalleryDetailView(DetailListView):
-    detail_model = Gallery
-    context_parent_object_name = 'gallery_object'
-    
+class GalleryDetailView(AlbumConfinementMixin, SimpleListView):
     model = Album
     paginate_by = settings.PORTICUS_ALBUMS_PAGINATION
 
     def get_queryset(self):
-        return self.detail_object.album_set.filter(publish=True).order_by('priority', 'name')
+        return self.gallery_object.album_set.filter(publish=True).order_by('priority', 'name')
     
     def get_template_names(self):
-        return (self.detail_object.template_name,)
+        return (self.gallery_object.template_name,)
+
+    def get(self, request, *args, **kwargs):
+        self.gallery_object = self.get_gallery_object()
+        return super(GalleryDetailView, self).get(request, *args, **kwargs)
 
 
 class GalleryTreeView(GalleryDetailView):
@@ -80,57 +87,71 @@ class GalleryTreeView(GalleryDetailView):
     template_name = "porticus/gallery_tree.html"
 
     def get_queryset(self):
-        return self.detail_object.album_set.filter(publish=True)
+        return self.gallery_object.album_set.filter(publish=True)
     
     def get_template_names(self):
         return (self.template_name,)
 
 
-class AlbumDetailView(DetailListView):
-    detail_model = Album
-    parent_slug = None
-    context_parent_object_name = 'album_object'
-
+class AlbumDetailView(AlbumConfinementMixin, SimpleListView):
+    """
+    Display the albums ressources and their tags
+    """
     model = Ressource
     paginate_by = settings.PORTICUS_RESSOURCES_PAGINATION
 
-    def get_parent_slug(self):
-        return self.parent_slug or self.kwargs.get('parent_slug')
-
-    def get_detail_object(self):
-        self.gallery_object = get_object_or_404(Gallery, slug=self.get_parent_slug(), publish=True)
-        return super(AlbumDetailView, self).get_detail_object()
-
     def get_queryset(self):
-        return self.detail_object.get_published_ressources()
-
-    def get_context_data(self, **kwargs):
-        kwargs.update({
-            'gallery_object': self.gallery_object,
-        })
-        return super(AlbumDetailView, self).get_context_data(**kwargs)
+        return self.album_object.get_published_ressources()
 
     def get_template_names(self):
-        return (self.detail_object.template_name,)
+        return (self.album_object.template_name,)
 
+    def get_context_data(self, **kwargs):
+        kwargs = super(AlbumDetailView, self).get_context_data(**kwargs)
+        
+        tags_q = Tag.objects.usage_for_queryset(self.object_list, min_count=1)
+        tags_q = calculate_cloud(tags_q, steps=6)
+            
+        kwargs.update({
+            # Filter ressource tags from the ressource list queryset
+            # Behavior to watch, maybe at this step, the queryset has been limited by the paginator
+            'ressources_tags': tags_q,
+        })
+        return kwargs
 
-class TagsView(TemplateView):
-    """View for every tags"""
-    template_name = 'porticus/tags.html'
+    def get(self, request, *args, **kwargs):
+        self.gallery_object = self.get_gallery_object()
+        self.album_object = self.get_album_object()
+        return super(AlbumDetailView, self).get(request, *args, **kwargs)
 
+class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
+    """
+    Template view to list tagged Ressources from an Album
+    """
+    model = Ressource
+    paginate_by = settings.PORTICUS_RESSOURCES_PAGINATION
+    template_name = 'porticus/tag_detail.html'
+    tag = None
 
-class TagDetailView(TemplateView):
-    """View for one tag"""
-    template_name = 'porticus/with_tag.html'
+    def get_tag_object(self):
+        tag = self.tag or self.kwargs.get('tag')
+        return Tag.objects.get(name=tag)
 
-    def get_query_tag(self):
-        return Tag.objects.get(name=self.kwargs['tags'])
+    def get_ressources_queryset(self):
+        return self.album_object.get_published_ressources()
 
-    def gallery(self):
-        return TaggedItem.objects.get_by_model(Gallery, self.get_query_tag())
+    def get_queryset(self):
+        return TaggedItem.objects.get_by_model(self.get_ressources_queryset(), self.tag_object)
 
-    def album(self):
-        return TaggedItem.objects.get_by_model(Album, self.get_query_tag())
+    def get_context_data(self, **kwargs):
+        kwargs = super(AlbumTagRessourcesView, self).get_context_data(**kwargs)
+        kwargs.update({
+            'tag_object': self.tag_object,
+        })
+        return kwargs
 
-    def ressource(self):
-        return TaggedItem.objects.get_by_model(Ressource, self.get_query_tag())
+    def get(self, request, *args, **kwargs):
+        self.gallery_object = self.get_gallery_object()
+        self.album_object = self.get_album_object()
+        self.tag_object = self.get_tag_object()
+        return super(AlbumTagRessourcesView, self).get(request, *args, **kwargs)

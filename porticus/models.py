@@ -96,12 +96,21 @@ class Album(MPTTModel):
         return Tag.objects.get_for_object(self)
 
     def get_published_children(self):
+        """
+        Return all ressources for the album and all its children
+        """
         return self.get_children().filter(publish=True)
     
     def get_published_descendants(self):
+        """
+        Return all ressources for the album and its direct descendants
+        """
         return self.get_descendants().filter(publish=True)
     
     def get_published_ressources(self):
+        """
+        Return all ressources for the album
+        """
         return self.ressource_set.filter(publish=True).order_by('priority', 'name')
 
     class Meta:
