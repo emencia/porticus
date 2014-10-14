@@ -1,8 +1,9 @@
 .. _DjangoCMS: https://www.django-cms.org
 .. _South: http://south.readthedocs.org/en/latest/
 .. _mptt: https://github.com/django-mptt/django-mptt/
-.. _sorl.thumbnail: https://github.com/sorl/sorl-thumbnail
 .. _django-tagging: https://github.com/brosner/django-tagging
+.. _easy-thumbnails: https://github.com/SmileyChris/easy-thumbnails
+.. _django-filer: https://github.com/stefanfoulis/django-filer
 
 porticus
 ========
@@ -13,20 +14,28 @@ Yet another File gallery for Django.
 
 Galleries and Albums have thumbnails, Ressources have a thumbnail and a file but the file can be a real uploaded file on your server or just an url to link to. Also Ressources have optional tags.
 
-Note that Albums make usage of `mptt`_, so Albums can have album children. Shipped templates are basics.
+Note that Albums make usage of `mptt`_, so Albums can have album children.
+
+Shipped templates are basics, you probably will have to override them to suit your needs.
+
+Migrations
+**********
+
+Since the **0.9 version**, *Django < 1.6* and *DjangoCMS < 3.0* support has been dropped and so Porticus migrations have been reseted, since we can't support migrations with *DjangoCMS < 3.0* because it will need too much time to fix them.
 
 Requires
 ********
 
-* Django >= 1.5;
+* Django >= 1.6;
 * `mptt`_;
-* `sorl.thumbnail`_;
 * `django-tagging`_;
+* `django-filer`_;
+* `easy-thumbnails`_;
 
 Optional
 ---------
 
-* `DjangoCMS`_ to use Porticus with the cms plugin;
+* `DjangoCMS`_ >= 3.0 to use Porticus with the cms plugin;
 * `South`_ migration is supported. This is not required, but strongly recommended for future updates;
 
 Install
@@ -50,6 +59,8 @@ In your ``INSTALLED_APPS`` setting : ::
         'sorl.thumbnail',
         'porticus',
         'tagging',
+        'filer',
+        'easy_thumbnails',
         ...
     )
 
@@ -73,4 +84,4 @@ Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in 
         (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps})
     )
 
-See the `Django documentation about Sitemaps <https://docs.djangoproject.com/en/1.7/ref/contrib/sitemaps/>`_ for more details.
+See the `Django documentation about Sitemaps <https://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_ for more details.

@@ -138,15 +138,22 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
         return Tag.objects.get(name=tag)
 
     def get_ressources_queryset(self):
-        return self.album_object.get_published_ressources()
+        if not hasattr(self, '_get_ressources_queryset_cache'):
+            setattr(self, '_get_ressources_queryset_cache', self.album_object.get_published_ressources())
+        return getattr(self, '_get_ressources_queryset_cache')
 
     def get_queryset(self):
         return TaggedItem.objects.get_by_model(self.get_ressources_queryset(), self.tag_object)
 
     def get_context_data(self, **kwargs):
         kwargs = super(AlbumTagRessourcesView, self).get_context_data(**kwargs)
+        
+        tags_q = Tag.objects.usage_for_queryset(self.get_ressources_queryset(), min_count=1)
+        tags_q = calculate_cloud(tags_q, steps=6)
+        
         kwargs.update({
             'tag_object': self.tag_object,
+            'ressources_tags': tags_q,
         })
         return kwargs
 

@@ -6,17 +6,16 @@ from django.utils.translation import ugettext_lazy as _
 
 from mptt.admin import MPTTModelAdmin
 
-from sorl.thumbnail.shortcuts import get_thumbnail
+from easy_thumbnails.files import get_thumbnailer
 
 from porticus.models import Ressource, Gallery, Album
 
 def admin_image(obj):
     if obj.image:
-        try:
-            thumbnail = get_thumbnail(obj.image, '75x75')
-        except:
-            return _('Invalid image for %s') % unicode(obj)
-        url = thumbnail.url
+        #try:
+        url = get_thumbnailer(obj.image).get_thumbnail({'size': (75, 75), 'crop': True}).url
+        #except:
+            #return _('Invalid image for %s') % unicode(obj)
         return '<img src="%s" alt="%s" />' % (url, unicode(obj))
     else:
         return _('No image for %s') % unicode(obj)
