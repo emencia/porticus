@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from cms.plugin_pool import plugin_pool
 from cms.plugin_base import CMSPluginBase
 
-from porticus.cmsplugin_album.models import GalleryPlugin as GalleryPluginModel
-from porticus.cmsplugin_album.models import AlbumPlugin as AlbumPluginModel
+from porticus.cmsplugin_porticus.models import GalleryPlugin as GalleryPluginModel
+from porticus.cmsplugin_porticus.models import AlbumPlugin as AlbumPluginModel
 
 class PorticusPluginBase(CMSPluginBase):
     module = 'Porticus'

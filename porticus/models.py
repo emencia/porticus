@@ -1,6 +1,8 @@
 """
 Models for porticus
 """
+import os
+
 from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -9,13 +11,12 @@ from django.utils.translation import ugettext_lazy as _
 from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
-#from filebrowser.fields import FileBrowseField
+
+from filer.fields.image import FilerImageField
+from filer.fields.file import FilerFileField
 
 from tagging.fields import TagField
 from tagging.models import Tag
-
-import os
-
 
 PUBLISHED_CHOICES = (
     (True, _('Published')),
@@ -29,7 +30,7 @@ class Gallery(models.Model):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = models.ImageField(_('image'), upload_to='porticus/gallery', blank=True)
+    image = FilerImageField(verbose_name=_('image'), related_name="gallery_image", null=True, blank=True, default=None)
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES, default=settings.PORTICUS_GALLERY_TEMPLATE_DEFAULT)
 
@@ -70,7 +71,7 @@ class Album(MPTTModel):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = models.ImageField(_('image'), upload_to='porticus/album', blank=True)
+    image = FilerImageField(verbose_name=_('image'), related_name="album_image", null=True, blank=True, default=None)
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_TEMPLATE_DEFAULT)
 
@@ -129,11 +130,10 @@ class Ressource(models.Model):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = models.ImageField(_('image'), blank=True, upload_to='porticus/ressources/images')
+    image = FilerImageField(verbose_name=_('image'), related_name="ressource_image", null=True, blank=True, default=None)
 
     file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
-    #file = FileBrowseField(_('file'), max_length=400, directory="porticus/ressources/files", blank=True, null=False)
-    file = models.FileField(_('file'), blank=True, upload_to='porticus/ressources/files')
+    file = FilerFileField(verbose_name=_('file'), related_name="ressource_file", null=True, blank=True, default=None)
     file_url = models.URLField(_('file url'), blank=True)
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
@@ -154,7 +154,6 @@ class Ressource(models.Model):
     @property
     def get_file(self):
         try:
-            #return self.file_url or self.file
             return self.file_url or self.file.url
         except ValueError:
             return None
@@ -166,23 +165,6 @@ class Ressource(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    #def save(self, *args, **kwargs):
-        #path = os.path.join(settings.PROJECT_PATH, str(self.file).lstrip('/'))
-        #try:
-            #if not self.file:
-                #raise OSError
-            #img_lst = os.listdir(path)
-            #for img in img_lst:
-                #if "_thumb" not in img and "_small" not in img\
-                    #and "_big" not in img and "_medium" not in img:
-                    #new_doc = Ressource(album=self.album, name=img,
-                                        #file_type=1, tags=self.tags,
-                                        #image=str(self.file) + img,
-                                        #file=str(self.file) + img)
-                    #new_doc.save()
-        #except OSError:
-            #super(Ressource, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-priority', 'name')

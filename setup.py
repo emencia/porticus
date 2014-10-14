@@ -22,8 +22,11 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'django-mptt==0.5.2',
-        'sorl-thumbnail==11.12',
+        'Django>=1.6',
+        'django-filer>=0.9.7',
+        'easy-thumbnails',
+        'django-mptt>=0.6.1',
+        'django-tagging>=0.3.2',
     ],
     include_package_data=True,
     zip_safe=False
