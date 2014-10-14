@@ -23,6 +23,12 @@ Migrations
 
 Since the **0.9 version**, *Django < 1.6* and *DjangoCMS < 3.0* support has been dropped and so Porticus migrations have been reseted, since we can't support migrations with *DjangoCMS < 3.0* because it will need too much time to fix them.
 
+Links
+*****
+
+* Download his `PyPi package <http://pypi.python.org/pypi/porticus>`_;
+* Clone it on his `Github repository <https://github.com/emencia/porticus>`_;
+
 Requires
 ********
 
