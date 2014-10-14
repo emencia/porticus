@@ -12,7 +12,7 @@
         {% endif %}
 
         {% if ressources_tags %}
-            <div class="panel callout radius cloud-tags">
+            <div class="panel callout radius cloud-tags text-center">
                 {% for tag in ressources_tags %}
                     <a class="tag-size-{{ tag.font_size }}" href="{% url 'porticus-album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
                 {% endfor %}
