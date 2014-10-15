@@ -47,7 +47,7 @@ class Gallery(models.Model):
 
     #@models.permalink
     #def get_absolute_url(self):
-        #return ('porticus-gallery-detail', (self.slug,))
+        #return ('porticus:gallery-detail', (self.slug,))
 
     def get_tags(self):
         return Tag.objects.get_for_object(self)
@@ -91,7 +91,7 @@ class Album(MPTTModel):
 
     #@models.permalink
     #def get_absolute_url(self):
-        #return ('porticus-album-detail', (self.gallery.slug, self.slug,))
+        #return ('porticus:album-detail', (self.gallery.slug, self.slug,))
 
     def get_tags(self):
         return Tag.objects.get_for_object(self)

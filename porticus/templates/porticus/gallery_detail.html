@@ -14,7 +14,7 @@
         <div class="album-grid-aside equal-heights">{% for album in album_list %}
         {% spaceless %}
             <div class="small-6 large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
-            <a href="{% url 'porticus-album-detail' gallery_slug=gallery_object.slug album_slug=album.slug %}">
+            <a href="{% url 'porticus:album-detail' gallery_slug=gallery_object.slug album_slug=album.slug %}">
                 <div class="large-6 columns thumb">
                     {% if album.image  %}
                         <img src="{% thumbnail album.image 105x80 crop %}" alt="">

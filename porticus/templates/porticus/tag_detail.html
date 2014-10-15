@@ -5,10 +5,10 @@
 <div class="row">
     <div class="tag-detail">
         {% if ressources_tags %}
-            <p><a href="{% url 'porticus-visite-album-detail' %}">RETOUR</a></p>
+            <p><a href="{% url 'porticus:visite-album-detail' %}">RETOUR</a></p>
             <div class="panel callout radius cloud-tags text-center">
                 {% for tag in ressources_tags %}
-                    <a class="tag-size-{{ tag.font_size }}{% if tag.name == tag_object.name %} active{% endif %}" href="{% url 'porticus-album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
+                    <a class="tag-size-{{ tag.font_size }}{% if tag.name == tag_object.name %} active{% endif %}" href="{% url 'porticus:album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
                 {% endfor %}
             </div>
         {% endif %}

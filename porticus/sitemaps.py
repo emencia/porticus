@@ -25,7 +25,7 @@ class PorticusGallerySitemap(Sitemap):
         return models.Gallery.published.order_by('priority', 'name')
     
     def location(self, obj):
-        return reverse('porticus-gallery-detail', kwargs={'gallery_slug': obj.slug})
+        return reverse('porticus:gallery-detail', kwargs={'gallery_slug': obj.slug})
     
     def lastmod(self, obj):
         return obj.creation_date
@@ -38,7 +38,7 @@ class PorticusAlbumSitemap(Sitemap):
         return models.Album.objects.filter(publish=True).order_by('priority', 'name')
     
     def location(self, obj):
-        return reverse('porticus-album-detail', kwargs={'gallery_slug': obj.gallery.slug, 'album_slug': obj.slug})
+        return reverse('porticus:album-detail', kwargs={'gallery_slug': obj.gallery.slug, 'album_slug': obj.slug})
     
     def lastmod(self, obj):
         """

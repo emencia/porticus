@@ -49,15 +49,13 @@ Install
 
 In your urls.py : ::
 
-    url(r'^porticus/', include('porticus.urls')),
+    url(r'^porticus/', include('porticus.urls', namespace='porticus')),
 
 Or to point out a specific gallery : ::
 
     url(r'^$', 'porticus.views.view_gallery_detail', {'slug':'home-intro'}, name='homepage_gallery_detail'),
 
-Then add the content of ``porticus.settings`` in your settings file.
-
-In your ``INSTALLED_APPS`` setting : ::
+Then add the content of ``porticus.settings`` in your settings file and the apps in your ``INSTALLED_APPS`` setting : ::
     
     INSTALLED_APPS = (
         ...

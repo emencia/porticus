@@ -18,7 +18,7 @@
                 <li>{% spaceless %}
                     <div class="row panel">
                         <div class="small-6 large-3 columns item equalized-item">
-                        <a href="{% url 'porticus-album-detail' gallery_slug=gallery_object.slug album_slug=node.slug %}">
+                        <a href="{% url 'porticus:album-detail' gallery_slug=gallery_object.slug album_slug=node.slug %}">
                             <div class="large-6 columns thumb">
                                 {% if node.image  %}
                                     <img src="{% thumbnail node.image 105x80 crop %}" alt="">
