@@ -2,8 +2,8 @@
 .. _South: http://south.readthedocs.org/en/latest/
 .. _mptt: https://github.com/django-mptt/django-mptt/
 .. _django-tagging: https://github.com/brosner/django-tagging
-.. _easy-thumbnails: https://github.com/SmileyChris/easy-thumbnails
-.. _django-filer: https://github.com/stefanfoulis/django-filer
+.. _django-filebrowser: https://github.com/sehmaschine/django-filebrowser
+.. _django-filebrowser-no-grappelli: https://github.com/smacker/django-filebrowser-no-grappelli
 
 porticus
 ========
@@ -35,8 +35,7 @@ Requires
 * Django >= 1.6;
 * `mptt`_;
 * `django-tagging`_;
-* `django-filer`_;
-* `easy-thumbnails`_;
+* `django-filebrowser-no-grappelli`_ >= 3.5.6;
 
 Optional
 ---------
@@ -63,7 +62,7 @@ Then add the content of ``porticus.settings`` in your settings file and the apps
         'sorl.thumbnail',
         'porticus',
         'tagging',
-        'filer',
+        'filebrowser',
         'easy_thumbnails',
         ...
     )
@@ -71,6 +70,14 @@ Then add the content of ``porticus.settings`` in your settings file and the apps
 Also if you want to use its plugin within `DjangoCMS`_ add this to ``INSTALLED_APPS`` setting : ::
 
     'porticus.cmsplugin_porticus',
+
+Then some `django-filebrowser`_ basic settings (see its documentation for more details) : ::
+
+    FILEBROWSER_VERSIONS_BASEDIR = '_uploads_versions'
+
+    FILEBROWSER_MAX_UPLOAD_SIZE = 10*1024*1024 # 10 Mb
+
+    FILEBROWSER_NORMALIZE_FILENAME = True
 
 Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in your project sitemap like so : ::
 

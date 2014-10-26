@@ -6,21 +6,17 @@ from django.utils.translation import ugettext_lazy as _
 
 from mptt.admin import MPTTModelAdmin
 
-from easy_thumbnails.files import get_thumbnailer
+from filebrowser.settings import ADMIN_THUMBNAIL
 
 from porticus.models import Ressource, Gallery, Album
 
-def admin_image(obj):
-    if obj.image:
-        #try:
-        url = get_thumbnailer(obj.image).get_thumbnail({'size': (75, 75), 'crop': True}).url
-        #except:
-            #return _('Invalid image for %s') % unicode(obj)
-        return '<img src="%s" alt="%s" />' % (url, unicode(obj))
+def slide_image_thumbnail(obj):
+    if obj.image and obj.image.filetype == "Image":
+        return '<img src="%s" />' % obj.image.version_generate(ADMIN_THUMBNAIL).url
     else:
         return _('No image for %s') % unicode(obj)
-admin_image.short_description = _('image')
-admin_image.allow_tags = True
+slide_image_thumbnail.short_description = _('image')
+slide_image_thumbnail.allow_tags = True
 
 
 class GalleryAdmin(admin.ModelAdmin):
@@ -28,8 +24,8 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description', 'slug')
     list_filter = ('creation_date', 'publish')
     list_editable = ('priority', 'publish', 'template_name')
-    list_display = (admin_image, 'name', 'publish', 'priority', 'template_name')
-    list_display_links = (admin_image, 'name')
+    list_display = (slide_image_thumbnail, 'name', 'publish', 'priority', 'template_name')
+    list_display_links = (slide_image_thumbnail, 'name')
     prepopulated_fields = {'slug': ('name', )}
     fieldsets = (
         (None, {
@@ -85,7 +81,7 @@ class RessourceAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     list_filter = ('file_type', 'creation_date', 'album', 'publish')
     list_editable = ('priority', 'publish')
-    list_display = (admin_image, 'album', 'name', 'publish', 'priority', 'file_type', 'file_weight')
+    list_display = (slide_image_thumbnail, 'album', 'name', 'publish', 'priority', 'file_type', 'file_weight')
     fieldsets = (
         (None, {
             'fields': ('album',),

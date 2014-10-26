@@ -12,8 +12,7 @@ from porticus.managers import RessourcePublishedManager, GalleryPublishedManager
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
-from filer.fields.image import FilerImageField
-from filer.fields.file import FilerFileField
+from filebrowser.fields import FileBrowseField
 
 from tagging.fields import TagField
 from tagging.models import Tag
@@ -30,7 +29,7 @@ class Gallery(models.Model):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = FilerImageField(verbose_name=_('image'), related_name="gallery_image", null=True, blank=True, default=None)
+    image = FileBrowseField(_('image'), max_length=255, null=True, blank=True, default=None)
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the gallery'), choices=settings.PORTICUS_GALLERY_TEMPLATE_CHOICES, default=settings.PORTICUS_GALLERY_TEMPLATE_DEFAULT)
 
@@ -50,6 +49,9 @@ class Gallery(models.Model):
         #return ('porticus:gallery-detail', (self.slug,))
 
     def get_tags(self):
+        """
+        Return a queryset of tags used from gallery's ressources (from the gallery's albums)
+        """
         return Tag.objects.get_for_object(self)
 
     def __unicode__(self):
@@ -71,7 +73,7 @@ class Album(MPTTModel):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = FilerImageField(verbose_name=_('image'), related_name="album_image", null=True, blank=True, default=None)
+    image = FileBrowseField(_('image'), max_length=255, null=True, blank=True, default=None)
 
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_TEMPLATE_DEFAULT)
 
@@ -94,6 +96,9 @@ class Album(MPTTModel):
         #return ('porticus:album-detail', (self.gallery.slug, self.slug,))
 
     def get_tags(self):
+        """
+        Return a queryset of tags used from album's ressources
+        """
         return Tag.objects.get_for_object(self)
 
     def get_published_children(self):
@@ -130,11 +135,11 @@ class Ressource(models.Model):
 
     description = models.TextField(_('description'), blank=True)
 
-    image = FilerImageField(verbose_name=_('image'), related_name="ressource_image", null=True, blank=True, default=None)
+    image = FileBrowseField(_('image'), max_length=255, null=True, blank=True, default=None, help_text=_("Mainly used as a thumbnails"))
 
     file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
-    file = FilerFileField(verbose_name=_('file'), related_name="ressource_file", null=True, blank=True, default=None)
-    file_url = models.URLField(_('file url'), blank=True)
+    file = FileBrowseField(_('file'), max_length=255, null=True, blank=True, default=None, help_text=_("Mainly used for original size image or a file to download"))
+    file_url = models.URLField(_('file url'), blank=True, help_text=_("Same meaning that 'file' attribute but for an external file to use instead"))
     file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
     publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
@@ -151,13 +156,22 @@ class Ressource(models.Model):
     def get_tags(self):
         return Tag.objects.get_for_object(self)
 
+    def get_file_kind(self):
+        return dict(settings.PORTICUS_RESSOURCE_FILETYPES)[self.file_type]
+        
     @property
     def get_file(self):
+        """
+        Main method to get the attached file without to search with file object and file_url
+        """
+        fileobject = None
+        if self.file:
+            fileobject = self.file.url
+        
         try:
-            return self.file_url or self.file.url
-        except ValueError:
+            return self.file_url or fileobject
+        except ValueError,AttributeError:
             return None
-
 
     def clean(self):
         if not self.get_file:

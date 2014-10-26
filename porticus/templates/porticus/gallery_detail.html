@@ -1,5 +1,5 @@
 {% extends "porticus/base.html" %}
-{% load i18n thumbnail tagging_tags %}
+{% load i18n fb_versions tagging_tags %}
 
 {% block head_title %}{{ gallery_object.name }} - {{ block.super }}{% endblock %}
 
@@ -17,7 +17,8 @@
             <a href="{% url 'porticus:album-detail' gallery_slug=gallery_object.slug album_slug=album.slug %}">
                 <div class="large-6 columns thumb">
                     {% if album.image  %}
-                        <img src="{% thumbnail album.image 105x80 crop %}" alt="">
+                        {% version_object album.image 'thumbnail' as image_thumb %}
+                        <img src="{{ image_thumb.url }}" alt="">
                     {% endif %}
                 </div>
                 <div class="large-6 columns content">

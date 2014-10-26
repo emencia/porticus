@@ -9,17 +9,18 @@
     {% spaceless %}
         <div class="three columns item equalized-item">
             {% if ressource.file_url %}
-                {% ifequal ressource.file_type 0 %}
+                {% if ressource.get_file_kind == 'binary' %}
                     <a href="{{ ressource.file_url }}" target="_blank">
                 {% else %}
                     <a href="{{ ressource.file_url }}">
-                {% endifequal %}
+                {% endif %}
             {% else %}
-                <a href="{{ ressource.file.url }}" class="popup-link">
+                <a href="{{ ressource.file.url }}" class="popup-link" target="_blank">
             {% endif %}
 
             {% if ressource.image %}
-                <img src="{% thumbnail ressource.image 105x105 crop %}" alt="">
+                {% version_object ressource.image 'thumbnail' as image_thumb %}
+                <img src="{{ image_thumb.url }}" alt="">
             {% endif %}
 
                 <h4>{{ ressource.name }}</h4>

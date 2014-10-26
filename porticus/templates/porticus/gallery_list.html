@@ -1,20 +1,26 @@
 {% extends "porticus/base.html" %}
-{% load i18n tagging_tags %}
+{% load i18n fb_versions tagging_tags %}
 
 {% block head_title %}{% trans "Galleries" %} - {{ block.super }}{% endblock %}
 
 {% block porticus_content %}<div class="row">
     <h2>{% trans "Galleries" %}</h2>
 
-    <ul>
-        {% for object in object_list %}
-        <li class="panel radius">
-            <a href="{% url 'porticus:gallery-detail' gallery_slug=object.slug %}">{{ object }}</a>
-        </li>
+    <div>
+        {% for gallery in object_list %}
+        <div class="columns small-6 medium-3 panel radius text-center{% if forloop.last %} end{% endif %}">
+            <a href="{% url 'porticus:gallery-detail' gallery_slug=gallery.slug %}">
+                {% if gallery.image %}
+                    {% version_object gallery.image 'thumbnail' as image_thumb %}
+                    <p><img src="{{ image_thumb.url }}" alt=""></p>
+                {% endif %}
+                <p>{{ gallery }}</p>
+            </a>
+        </div>
         {% empty %}
-        <li class="empty">{% trans "No gallery" %}</li>
+        <div class="text-center"><p class="empty">{% trans "No gallery" %}</p></div>
         {% endfor %}
-    </ul>
+    </div>
     
     {% if is_paginated %}<ul class="pagination right">
         {% if page_obj.has_previous %}<li class="arrow"><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>{% endif %}

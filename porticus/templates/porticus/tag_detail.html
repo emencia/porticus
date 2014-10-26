@@ -1,33 +1,34 @@
 {% extends "porticus/base.html" %}
-{% load i18n thumbnail tagging_tags %}
+{% load i18n fb_versions tagging_tags %}
 
 {% block porticus_content %}
 <div class="row">
     <div class="tag-detail">
         {% if ressources_tags %}
-            <p><a href="{% url 'porticus:visite-album-detail' %}">RETOUR</a></p>
-            <div class="panel callout radius cloud-tags text-center">
+            <p><a href="{% url 'porticus:album-detail' gallery_slug=gallery_object.slug album_slug=album_object.slug %}">Retour</a></p>
+            <p class="cloud-tags text-center">
                 {% for tag in ressources_tags %}
-                    <a class="tag-size-{{ tag.font_size }}{% if tag.name == tag_object.name %} active{% endif %}" href="{% url 'porticus:album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
+                    <a class="label radius tag-size-{{ tag.font_size }}{% if tag.name == tag_object.name %} active{% endif %}" href="{% url 'porticus:album-tag' gallery_slug=gallery_object.slug album_slug=album_object.slug tag=tag.name %}">{{ tag.name }}</a>
                 {% endfor %}
-            </div>
+            </p>
         {% endif %}
 
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
             <div class="large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
                 {% if ressource.file_url %}
-                    {% ifequal ressource.file_type 0 %}
+                    {% if ressource.get_file_kind == 'binary' %}
                         <a href="{{ ressource.file_url }}" target="_blank">
                     {% else %}
                         <a href="{{ ressource.file_url }}">
-                    {% endifequal %}
+                    {% endif %}
                 {% else %}
-                    <a href="{{ ressource.file.url }}" class="popup-link">
+                    <a href="{{ ressource.file.url }}" class="popup-link" target="_blank">
                 {% endif %}
                 
                 {% if ressource.image %}
-                    <img src="{% thumbnail ressource.image 105x105 crop %}" alt="">
+                    {% version_object ressource.image 'thumbnail' as image_thumb %}
+                    <img src="{{ image_thumb.url }}" alt="">
                 {% endif %}
                 
                     <h4>{{ ressource.name }}</h4>

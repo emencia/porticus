@@ -23,8 +23,7 @@ setup(
     ],
     install_requires=[
         'Django>=1.6',
-        'django-filer>=0.9.7',
-        'easy-thumbnails',
+        'django-filebrowser-no-grappelli>=3.5.6',
         'django-mptt>=0.6.1',
         'django-tagging>=0.3.2',
     ],
