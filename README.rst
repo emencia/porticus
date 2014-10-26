@@ -59,11 +59,9 @@ Then add the content of ``porticus.settings`` in your settings file and the apps
     INSTALLED_APPS = (
         ...
         'mptt',
-        'sorl.thumbnail',
-        'porticus',
         'tagging',
         'filebrowser',
-        'easy_thumbnails',
+        'porticus',
         ...
     )
 
@@ -71,7 +69,7 @@ Also if you want to use its plugin within `DjangoCMS`_ add this to ``INSTALLED_A
 
     'porticus.cmsplugin_porticus',
 
-Then some `django-filebrowser`_ basic settings (see its documentation for more details) : ::
+Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentation for more details) : ::
 
     FILEBROWSER_VERSIONS_BASEDIR = '_uploads_versions'
 
