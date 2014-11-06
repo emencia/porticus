@@ -4,6 +4,7 @@
 .. _django-tagging: https://github.com/brosner/django-tagging
 .. _django-filebrowser: https://github.com/sehmaschine/django-filebrowser
 .. _django-filebrowser-no-grappelli: https://github.com/smacker/django-filebrowser-no-grappelli
+.. _cmsplugin_porticus: https://github.com/emencia/cmsplugin_porticus
 
 porticus
 ========
@@ -17,6 +18,8 @@ Galleries and Albums have thumbnails, Ressources have a thumbnail and a file but
 Note that Albums make usage of `mptt`_, so Albums can have album children.
 
 Shipped templates are basics, you probably will have to override them to suit your needs.
+
+A `DjangoCMS`_ plugin is available on `cmsplugin_porticus`_ (For *Porticus<0.9* and so for *DjangoCMS 2.x* use the plugin version *<0.2*).
 
 Migrations
 **********
@@ -32,15 +35,15 @@ Links
 Requires
 ********
 
-* Django >= 1.6;
+* Django >= 1.6 (Last support for *Django<1.6* and so for *DjangoCMS 2.x* is available on repository branch *djangocms_2*);
 * `mptt`_;
 * `django-tagging`_;
 * `django-filebrowser-no-grappelli`_ >= 3.5.6;
 
+
 Optional
 ---------
 
-* `DjangoCMS`_ >= 3.0 to use Porticus with the cms plugin;
 * `South`_ migration is supported. This is not required, but strongly recommended for future updates;
 
 Install
@@ -65,9 +68,11 @@ Then add the content of ``porticus.settings`` in your settings file and the apps
         ...
     )
 
-Also if you want to use its plugin within `DjangoCMS`_ add this to ``INSTALLED_APPS`` setting : ::
+Then add its settings : ::
 
-    'porticus.cmsplugin_porticus',
+    from porticus.settings import *
+
+See the app ``settings.py`` file to see what setting you can override.
 
 Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentation for more details) : ::
 
