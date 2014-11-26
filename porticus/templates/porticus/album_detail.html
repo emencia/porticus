@@ -22,23 +22,13 @@
         <div class="album-grid-simple equal-heights">{% for ressource in ressource_list %}
         {% spaceless %}
             <div class="large-3 columns item equalized-item{% if forloop.last %} end{% endif %}">
-                {% if ressource.file_url %}
-                    {% if ressource.get_file_kind == 'binary' %}
-                        <a href="{{ ressource.file_url }}" target="_blank">
-                    {% else %}
-                        <a href="{{ ressource.file_url }}">
-                    {% endif %}
-                {% else %}
-                    <a href="{{ ressource.file.url }}" class="popup-link" target="_blank">
-                {% endif %}
-                
+                <a href="{{ ressource.slug }}/" target="_blank">
                 {% if ressource.image %}
                     {% version_object ressource.image 'thumbnail' as image_thumb %}
                     <img src="{{ image_thumb.url }}" alt="">
                 {% endif %}
                 
                     <h4>{{ ressource.name }}</h4>
-                </a>
                 
                 {% if ressource.description %}
                 <div class="description">

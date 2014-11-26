@@ -78,19 +78,21 @@ class AlbumAdmin(MPTTModelAdmin):
 
 class RessourceAdmin(admin.ModelAdmin):
     ordering = ('-creation_date',)
-    search_fields = ('name', 'description')
+    search_fields = ('name', 'description', 'slug')
     list_filter = ('file_type', 'creation_date', 'album', 'publish')
     list_editable = ('priority', 'publish')
     list_display = (slide_image_thumbnail, 'album', 'name', 'publish', 'priority', 'file_type', 'file_weight')
+    filter_horizontal = ('related',)
+    prepopulated_fields = {'slug': ('name', )}
     fieldsets = (
         (None, {
-            'fields': ('album',),
+            'fields': ('album', 'related'),
         }),
         (None, {
             'fields': ('publish', 'priority'),
         }),
         (None, {
-            'fields': ('name', 'image', 'tags'),
+            'fields': ('name', 'slug', 'image', 'tags'),
         }),
         (_('File'), {
             'fields': ('file_type', 'file', 'file_url', 'file_weight'), 

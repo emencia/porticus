@@ -5,8 +5,8 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ImproperlyConfigured
 
-from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 from django.views.generic.list import BaseListView
+from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 
 from porticus.models import Gallery, Album, Ressource
 
@@ -30,9 +30,10 @@ class AlbumConfinementMixin(object):
     """
     gallery_slug = None
     album_slug = None
+    ressource_slug = None
     gallery_object = None
     album_object = None
-    gallery_object = None
+    ressource_object = None
 
     def get_gallery_slug(self):
         return self.gallery_slug or self.kwargs.get('gallery_slug')
@@ -40,17 +41,25 @@ class AlbumConfinementMixin(object):
     def get_album_slug(self):
         return self.album_slug or self.kwargs.get('album_slug')
 
+    def get_ressource_slug(self):
+        return self.ressource_slug or self.kwargs.get('ressource_slug')
+
     def get_gallery_object(self):
         return get_object_or_404(Gallery, slug=self.get_gallery_slug(), publish=True)
 
     def get_album_object(self):
         return get_object_or_404(Album, slug=self.get_album_slug(), publish=True)
 
+    def get_ressource_object(self):
+        return get_object_or_404(Ressource, slug=self.get_ressource_slug(), publish=True)
+
     def get_context_data(self, **kwargs):
         if self.album_object:
             kwargs['album_object'] = self.album_object
         if self.gallery_object:
             kwargs['gallery_object'] = self.gallery_object
+        if self.ressource_object:
+            kwargs['ressource_object'] = self.ressource_object
         return super(AlbumConfinementMixin, self).get_context_data(**kwargs)
 
 
@@ -162,3 +171,18 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
         self.album_object = self.get_album_object()
         self.tag_object = self.get_tag_object()
         return super(AlbumTagRessourcesView, self).get(request, *args, **kwargs)
+
+class RessourceDetailView(AlbumConfinementMixin, TemplateView):
+    """
+    Display the ressources and their tags
+    """
+    template_name = 'porticus/ressource_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        self.gallery_object = self.get_gallery_object()
+        self.album_object = self.get_album_object()
+        self.ressource_object = self.get_ressource_object()
+        return super(RessourceDetailView, self).get(request, *args, **kwargs)
+
+
+
