@@ -148,7 +148,7 @@ class Ressource(models.Model):
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
-    slug = models.SlugField(_('slug'), unique=False, max_length=100)
+    slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
     tags = TagField(_('tags'))
 
