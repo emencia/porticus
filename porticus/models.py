@@ -140,7 +140,6 @@ class Ressource(models.Model):
     file_type = models.IntegerField(_('file type'), choices=settings.PORTICUS_RESSOURCE_FILETYPE_CHOICES, default=settings.PORTICUS_RESSOURCE_FILETYPE_DEFAULT)
     file = FileBrowseField(_('file'), max_length=255, null=True, blank=True, default=None, help_text=_("Mainly used for original size image or a file to download"))
     file_url = models.URLField(_('file url'), blank=True, help_text=_("Same meaning that 'file' attribute but for an external file to use instead"))
-    file_weight = models.CharField(_('file weight'), blank=True, max_length=15)
 
     publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
 
@@ -148,7 +147,7 @@ class Ressource(models.Model):
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
 
-    slug = models.SlugField(_('slug'), unique=True, max_length=100)
+    slug = models.SlugField(_('slug'), max_length=100)
 
     tags = TagField(_('tags'))
 
@@ -183,6 +182,7 @@ class Ressource(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('-priority', 'name')
+        ordering = ('album', 'priority')
         verbose_name = _('ressource')
         verbose_name_plural = _('ressources')
+        unique_together = ("album", "slug")
