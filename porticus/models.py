@@ -130,7 +130,7 @@ class Album(MPTTModel):
 class Ressource(models.Model):
     """Model for representing a ressource"""
     album = models.ForeignKey(Album)
-
+    related = models.ManyToManyField("self", null=True, blank=True)
     name = models.CharField(_('name'), max_length=250)
 
     description = models.TextField(_('description'), blank=True)
@@ -147,6 +147,8 @@ class Ressource(models.Model):
     priority = models.IntegerField(_('display priority'), default=100)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+
+    slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
     tags = TagField(_('tags'))
 

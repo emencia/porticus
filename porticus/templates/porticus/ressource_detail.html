@@ -1,0 +1,30 @@
+{% extends "porticus/base.html" %}
+{% load i18n fb_versions tagging_tags porticus_tags %}
+
+{% block head_title %}{{ ressource_object.name }} - {{ block.super }}{% endblock %}
+
+{% block porticus_content %}
+<div class="row">
+    <h3>{{ ressource_object.name }}</h3>
+
+<!--     {% if ressource_object.file_url %}
+        {% if ressource_object.get_file_kind == 'binary' %}
+            <a href="{{ ressource_object.file_url }}" target="_blank">
+        {% else %}
+            <a href="{{ ressource_object.file_url }}">
+        {% endif %}
+    {% else %}
+        <a href="{{ ressource_object.file.url }}" class="popup-link" target="_blank">
+    {% endif %}
+    </a>
+ -->
+    {% if ressource_object.file_url %}
+        {% if ressource_object.get_file_kind == 'binary' %}
+            <a href="{{ ressource_object.file_url }}" target="_blank"> DOWNLOAD </a>
+        {% else %}
+            <iframe width="1280" height="720" src="{{ ressource_object.file_url|embed }}" frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+    {% endif %}
+    <img src="{{ ressource_object.file.url }}">
+</div>
+{% endblock %}
