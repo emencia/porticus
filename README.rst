@@ -35,16 +35,16 @@ Links
 Requires
 ********
 
-* Django >= 1.6 (Last support for *Django<1.6* and so for *DjangoCMS 2.x* is available on repository branch *djangocms_2*);
+* Django >= 1.7;
+
+  * Last release for *Django<1.6* and *DjangoCMS 2.4 is available on repository branch *djangocms_2*;
+  * Last release for *Django<1.7* and *DjangoCMS 3.0 is available on repository branch *djangocms_1-6*;
+
 * `mptt`_;
 * `django-tagging`_;
 * `django-filebrowser-no-grappelli`_ >= 3.5.6;
 
-
-Optional
----------
-
-* `South`_ migration is supported. This is not required, but strongly recommended for future updates;
+**Warning:** Since ``1.0.0``, database migration has been switched to Django 1.7 migrations system and `South`_ support has been dropped. The `South`_ migration files are still there but moved to ``south_migrations``, resulting in you need ``south==1.x`` to use them. This is only needed if you need to migrate project datas to the last Porticus version, you don't have to care about this if you just start a new project.
 
 Install
 *******

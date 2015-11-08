@@ -1,124 +1,100 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import mptt.fields
+import filebrowser.fields
+import tagging.fields
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Gallery'
-        db.create_table(u'porticus_gallery', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=250)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('image', self.gf('filebrowser.fields.FileBrowseField')(default=None, max_length=255, null=True, blank=True)),
-            ('template_name', self.gf('django.db.models.fields.CharField')(default='porticus/gallery_detail.html', max_length=255)),
-            ('publish', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('priority', self.gf('django.db.models.fields.IntegerField')(default=100)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-        ))
-        db.send_create_signal(u'porticus', ['Gallery'])
+    dependencies = [
+    ]
 
-        # Adding model 'Album'
-        db.create_table(u'porticus_album', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('gallery', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['porticus.Gallery'])),
-            ('parent', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='children', null=True, to=orm['porticus.Album'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=250)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('image', self.gf('filebrowser.fields.FileBrowseField')(default=None, max_length=255, null=True, blank=True)),
-            ('template_name', self.gf('django.db.models.fields.CharField')(default='porticus/album_detail.html', max_length=255)),
-            ('publish', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('priority', self.gf('django.db.models.fields.IntegerField')(default=100)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-            (u'lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            (u'level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal(u'porticus', ['Album'])
-
-        # Adding model 'Ressource'
-        db.create_table(u'porticus_ressource', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('album', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['porticus.Album'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=250)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('image', self.gf('filebrowser.fields.FileBrowseField')(default=None, max_length=255, null=True, blank=True)),
-            ('file_type', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('file', self.gf('filebrowser.fields.FileBrowseField')(default=None, max_length=255, null=True, blank=True)),
-            ('file_url', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
-            ('file_weight', self.gf('django.db.models.fields.CharField')(max_length=15, blank=True)),
-            ('publish', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('priority', self.gf('django.db.models.fields.IntegerField')(default=100)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('tags', self.gf('tagging.fields.TagField')()),
-        ))
-        db.send_create_signal(u'porticus', ['Ressource'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Gallery'
-        db.delete_table(u'porticus_gallery')
-
-        # Deleting model 'Album'
-        db.delete_table(u'porticus_album')
-
-        # Deleting model 'Ressource'
-        db.delete_table(u'porticus_ressource')
-
-
-    models = {
-        u'porticus.album': {
-            'Meta': {'object_name': 'Album'},
-            'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'gallery': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['porticus.Gallery']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('filebrowser.fields.FileBrowseField', [], {'default': 'None', 'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            u'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            u'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '250'}),
-            'parent': ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': u"orm['porticus.Album']"}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '100'}),
-            'publish': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            u'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
-            'template_name': ('django.db.models.fields.CharField', [], {'default': "'porticus/album_detail.html'", 'max_length': '255'}),
-            u'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
-        },
-        u'porticus.gallery': {
-            'Meta': {'ordering': "('-priority', 'name')", 'object_name': 'Gallery'},
-            'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('filebrowser.fields.FileBrowseField', [], {'default': 'None', 'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '250'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '100'}),
-            'publish': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
-            'template_name': ('django.db.models.fields.CharField', [], {'default': "'porticus/gallery_detail.html'", 'max_length': '255'})
-        },
-        u'porticus.ressource': {
-            'Meta': {'ordering': "('-priority', 'name')", 'object_name': 'Ressource'},
-            'album': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['porticus.Album']"}),
-            'creation_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'file': ('filebrowser.fields.FileBrowseField', [], {'default': 'None', 'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'file_type': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
-            'file_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'file_weight': ('django.db.models.fields.CharField', [], {'max_length': '15', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('filebrowser.fields.FileBrowseField', [], {'default': 'None', 'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '250'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '100'}),
-            'publish': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'tags': ('tagging.fields.TagField', [], {})
-        }
-    }
-
-    complete_apps = ['porticus']
+    operations = [
+        migrations.CreateModel(
+            name='Album',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=250, verbose_name='name')),
+                ('description', models.TextField(verbose_name='description', blank=True)),
+                ('image', filebrowser.fields.FileBrowseField(default=None, max_length=255, null=True, verbose_name='image', blank=True)),
+                ('template_name', models.CharField(default=b'porticus/album_detail.html', help_text='Template used to render the album', max_length=255, verbose_name='template', choices=[(b'porticus/album_detail.html', b'Album template to display its ressources (default)')])),
+                ('publish', models.BooleanField(default=True, verbose_name='published', choices=[(True, 'Published'), (False, 'Unpublished')])),
+                ('priority', models.IntegerField(default=100, verbose_name='display priority')),
+                ('creation_date', models.DateTimeField(auto_now_add=True, verbose_name='creation date')),
+                ('slug', models.SlugField(unique=True, max_length=100, verbose_name='slug')),
+                ('lft', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('level', models.PositiveIntegerField(editable=False, db_index=True)),
+            ],
+            options={
+                'verbose_name': 'album',
+                'verbose_name_plural': 'albums',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Gallery',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=250, verbose_name='name')),
+                ('description', models.TextField(verbose_name='description', blank=True)),
+                ('image', filebrowser.fields.FileBrowseField(default=None, max_length=255, null=True, verbose_name='image', blank=True)),
+                ('template_name', models.CharField(default=b'porticus/gallery_detail.html', help_text='Template used to render the gallery', max_length=255, verbose_name='template', choices=[(b'porticus/gallery_detail.html', b'Default template')])),
+                ('publish', models.BooleanField(default=True, verbose_name='published', choices=[(True, 'Published'), (False, 'Unpublished')])),
+                ('priority', models.IntegerField(default=100, verbose_name='display priority')),
+                ('creation_date', models.DateTimeField(auto_now_add=True, verbose_name='creation date')),
+                ('slug', models.SlugField(unique=True, max_length=100, verbose_name='slug')),
+            ],
+            options={
+                'ordering': ('-priority', 'name'),
+                'verbose_name': 'gallery',
+                'verbose_name_plural': 'galleries',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Ressource',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=250, verbose_name='name')),
+                ('description', models.TextField(verbose_name='description', blank=True)),
+                ('image', filebrowser.fields.FileBrowseField(default=None, max_length=255, blank=True, help_text='Mainly used as a thumbnails', null=True, verbose_name='image')),
+                ('file_type', models.IntegerField(default=1, verbose_name='file type', choices=[(0, b'Binary'), (1, b'Image'), (2, b'Youtube (only on file url)')])),
+                ('file', filebrowser.fields.FileBrowseField(default=None, max_length=255, blank=True, help_text='Mainly used for original size image or a file to download', null=True, verbose_name='file')),
+                ('file_url', models.URLField(help_text="Same meaning that 'file' attribute but for an external file to use instead", verbose_name='file url', blank=True)),
+                ('publish', models.BooleanField(default=True, verbose_name='published', choices=[(True, 'Published'), (False, 'Unpublished')])),
+                ('priority', models.IntegerField(default=100, verbose_name='display priority')),
+                ('creation_date', models.DateTimeField(auto_now_add=True, verbose_name='creation date')),
+                ('slug', models.SlugField(max_length=100, verbose_name='slug')),
+                ('tags', tagging.fields.TagField(max_length=255, verbose_name='tags', blank=True)),
+                ('album', models.ForeignKey(to='porticus.Album')),
+                ('related', models.ManyToManyField(related_name='related_rel_+', null=True, to='porticus.Ressource', blank=True)),
+            ],
+            options={
+                'ordering': ('album', 'priority'),
+                'verbose_name': 'ressource',
+                'verbose_name_plural': 'ressources',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='ressource',
+            unique_together=set([('album', 'slug')]),
+        ),
+        migrations.AddField(
+            model_name='album',
+            name='gallery',
+            field=models.ForeignKey(to='porticus.Gallery'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='album',
+            name='parent',
+            field=mptt.fields.TreeForeignKey(related_name='children', blank=True, to='porticus.Album', null=True),
+            preserve_default=True,
+        ),
+    ]
