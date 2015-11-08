@@ -19,12 +19,7 @@ Note that Albums make usage of `mptt`_, so Albums can have album children.
 
 Shipped templates are basics, you probably will have to override them to suit your needs.
 
-A `DjangoCMS`_ plugin is available on `cmsplugin_porticus`_ (For *Porticus<0.9* and so for *DjangoCMS 2.x* use the plugin version *<0.2*).
-
-Migrations
-**********
-
-Since the **0.9 version**, *Django < 1.6* and *DjangoCMS < 3.0* support has been dropped and so Porticus migrations have been reseted, since we can't support migrations with *DjangoCMS < 3.0* because it will need too much time to fix them.
+A `DjangoCMS`_ plugin is available on `cmsplugin_porticus`_.
 
 Links
 *****
@@ -37,8 +32,8 @@ Requires
 
 * Django >= 1.7;
 
-  * Last release for *Django<1.6* and *DjangoCMS 2.4 is available on repository branch *djangocms_2*;
-  * Last release for *Django<1.7* and *DjangoCMS 3.0 is available on repository branch *djangocms_1-6*;
+  - Last release for *Django<1.6* and *DjangoCMS 2.4* is available on repository branch *djangocms_2*;
+  - Last release for *Django<1.7* and *DjangoCMS 3.0* is available on repository branch *djangocms_1-6*;
 
 * `mptt`_;
 * `django-tagging`_;
