@@ -44,6 +44,10 @@ Requires
 Install
 *******
 
+Install package from PyPi: ::
+
+    pip install porticus
+
 In your urls.py : ::
 
     url(r'^porticus/', include('porticus.urls', namespace='porticus')),
