@@ -78,7 +78,7 @@ class Album(MPTTModel):
     template_name = models.CharField(_('template'), max_length=255, help_text=_('Template used to render the album'), choices=settings.PORTICUS_ALBUM_TEMPLATE_CHOICES, default=settings.PORTICUS_ALBUM_TEMPLATE_DEFAULT)
 
     publish = models.BooleanField(_('published'), choices=PUBLISHED_CHOICES, default=True)
-    
+
     priority = models.IntegerField(_('display priority'), default=100)
 
     creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
@@ -106,13 +106,13 @@ class Album(MPTTModel):
         Return all ressources for the album and all its children
         """
         return self.get_children().filter(publish=True)
-    
+
     def get_published_descendants(self):
         """
         Return all ressources for the album and its direct descendants
         """
         return self.get_descendants().filter(publish=True)
-    
+
     def get_published_ressources(self):
         """
         Return all ressources for the album
@@ -130,7 +130,7 @@ class Album(MPTTModel):
 class Ressource(models.Model):
     """Model for representing a ressource"""
     album = models.ForeignKey(Album)
-    related = models.ManyToManyField("self", null=True, blank=True)
+    related = models.ManyToManyField("self", blank=True)
     name = models.CharField(_('name'), max_length=250)
 
     description = models.TextField(_('description'), blank=True)
@@ -159,7 +159,7 @@ class Ressource(models.Model):
 
     def get_file_kind(self):
         return dict(settings.PORTICUS_RESSOURCE_FILETYPES)[self.file_type]
-        
+
     @property
     def get_file(self):
         """
@@ -168,7 +168,7 @@ class Ressource(models.Model):
         fileobject = None
         if self.file:
             fileobject = self.file.url
-        
+
         try:
             return self.file_url or fileobject
         except ValueError,AttributeError:
