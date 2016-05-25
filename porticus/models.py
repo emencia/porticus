@@ -7,6 +7,7 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now as tz_now
 
 from porticus.managers import RessourcePublishedManager, GalleryPublishedManager, AlbumPublishedManager
 
@@ -37,7 +38,7 @@ class Gallery(models.Model):
 
     priority = models.IntegerField(_('display priority'), default=100)
 
-    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+    creation_date = models.DateTimeField(_('creation date'), editable=False)
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
@@ -48,14 +49,23 @@ class Gallery(models.Model):
     #def get_absolute_url(self):
         #return ('porticus:gallery-detail', (self.slug,))
 
+    def __unicode__(self):
+        return self.name
+
     def get_tags(self):
         """
         Return a queryset of tags used from gallery's ressources (from the gallery's albums)
         """
         return Tag.objects.get_for_object(self)
 
-    def __unicode__(self):
-        return self.name
+    def save(self, *args, **kwargs):
+        """
+        Fill 'creation_date' attribute on first create
+        """
+        if self.creation_date is None:
+            self.creation_date = tz_now()
+
+        super(Gallery, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-priority', 'name')
@@ -81,7 +91,7 @@ class Album(MPTTModel):
 
     priority = models.IntegerField(_('display priority'), default=100)
 
-    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+    creation_date = models.DateTimeField(_('creation date'), editable=False)
 
     slug = models.SlugField(_('slug'), unique=True, max_length=100)
 
@@ -119,6 +129,15 @@ class Album(MPTTModel):
         """
         return self.ressource_set.filter(publish=True).order_by('priority', 'name')
 
+    def save(self, *args, **kwargs):
+        """
+        Fill 'creation_date' attribute on first create
+        """
+        if self.creation_date is None:
+            self.creation_date = tz_now()
+
+        super(Album, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name = _('album')
         verbose_name_plural = _('albums')
@@ -145,7 +164,7 @@ class Ressource(models.Model):
 
     priority = models.IntegerField(_('display priority'), default=100)
 
-    creation_date = models.DateTimeField(_('creation date'), auto_now_add=True)
+    creation_date = models.DateTimeField(_('creation date'), editable=False)
 
     slug = models.SlugField(_('slug'), max_length=100)
 
@@ -153,6 +172,9 @@ class Ressource(models.Model):
 
     objects = models.Manager()
     published = RessourcePublishedManager()
+
+    def __unicode__(self):
+        return self.name
 
     def get_tags(self):
         return Tag.objects.get_for_object(self)
@@ -178,8 +200,14 @@ class Ressource(models.Model):
         if not self.get_file:
             raise ValidationError(_('Please upload a file or give a file url'))
 
-    def __unicode__(self):
-        return self.name
+    def save(self, *args, **kwargs):
+        """
+        Fill 'creation_date' attribute on first create
+        """
+        if self.creation_date is None:
+            self.creation_date = tz_now()
+
+        super(Ressource, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('album', 'priority')
