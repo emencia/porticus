@@ -43,6 +43,7 @@ class GalleryAdmin(admin.ModelAdmin):
 class RessourceInline(admin.StackedInline):
     model = Ressource
     ordering = ('priority', 'name')
+    prepopulated_fields = {'slug': ('name', )}
 
 
 class AlbumAdmin(MPTTModelAdmin):
@@ -92,7 +93,7 @@ class RessourceAdmin(admin.ModelAdmin):
             'fields': ('name', 'slug', 'image'),
         }),
         (_('File'), {
-            'fields': ('file_type', 'file', 'file_url'), 
+            'fields': ('file_type', 'file', 'file_url'),
             'description': _('You must fill one of these fields'),
         }),
         (None, {
