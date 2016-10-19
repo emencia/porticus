@@ -3,6 +3,11 @@
 Changelog
 =========
 
+Version 1.1.4 - 2016/10/19
+--------------------------
+
+* Fixed error from previous commit that was causing error for existing tags;
+
 Version 1.1.3 - 2016/10/19
 --------------------------
 

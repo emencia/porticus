@@ -150,6 +150,8 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
             q = Tag.objects.get(name=tag)
         except Tag.DoesNotExist:
             raise http.Http404
+        else:
+            return q
 
     def get_ressources_queryset(self):
         if not hasattr(self, '_get_ressources_queryset_cache'):
