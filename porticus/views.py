@@ -4,6 +4,7 @@ Views for porticus
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ImproperlyConfigured
+from django import http
 
 from django.views.generic.list import BaseListView
 from django.views.generic.base import TemplateResponseMixin, View, TemplateView
@@ -12,6 +13,7 @@ from porticus.models import Gallery, Album, Ressource
 
 from tagging.models import Tag, TaggedItem
 from tagging.utils import calculate_cloud
+
 
 class SimpleListView(TemplateResponseMixin, BaseListView):
     """
@@ -24,8 +26,8 @@ class SimpleListView(TemplateResponseMixin, BaseListView):
 class AlbumConfinementMixin(object):
     """
     Mixin that include methods to confine a view that get objects from a specific Gallery+Album
-    
-    You still have to load objects yourself with method ``get_gallery_object`` and ``get_album_object`` 
+
+    You still have to load objects yourself with method ``get_gallery_object`` and ``get_album_object``
     in your get/post/whatever view methods.
     """
     gallery_slug = None
@@ -78,7 +80,7 @@ class GalleryDetailView(AlbumConfinementMixin, SimpleListView):
 
     def get_queryset(self):
         return self.gallery_object.album_set.filter(publish=True).order_by('priority', 'name')
-    
+
     def get_template_names(self):
         return (self.gallery_object.template_name,)
 
@@ -89,7 +91,7 @@ class GalleryDetailView(AlbumConfinementMixin, SimpleListView):
 
 class GalleryTreeView(GalleryDetailView):
     """
-    Display the album tree for a gallery, inherit from GalleryDetailView, does not 
+    Display the album tree for a gallery, inherit from GalleryDetailView, does not
     follow the gallery template
     """
     paginate_by = None
@@ -97,7 +99,7 @@ class GalleryTreeView(GalleryDetailView):
 
     def get_queryset(self):
         return self.gallery_object.album_set.filter(publish=True)
-    
+
     def get_template_names(self):
         return (self.template_name,)
 
@@ -117,10 +119,10 @@ class AlbumDetailView(AlbumConfinementMixin, SimpleListView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(AlbumDetailView, self).get_context_data(**kwargs)
-        
+
         tags_q = Tag.objects.usage_for_queryset(self.object_list, min_count=1)
         tags_q = calculate_cloud(tags_q, steps=6)
-            
+
         kwargs.update({
             # Filter ressource tags from the ressource list queryset
             # Behavior to watch, maybe at this step, the queryset has been limited by the paginator
@@ -144,7 +146,10 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
 
     def get_tag_object(self):
         tag = self.tag or self.kwargs.get('tag')
-        return Tag.objects.get(name=tag)
+        try:
+            q = Tag.objects.get(name=tag)
+        except Tag.DoesNotExist:
+            raise http.Http404
 
     def get_ressources_queryset(self):
         if not hasattr(self, '_get_ressources_queryset_cache'):
@@ -156,10 +161,10 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(AlbumTagRessourcesView, self).get_context_data(**kwargs)
-        
+
         tags_q = Tag.objects.usage_for_queryset(self.get_ressources_queryset(), min_count=1)
         tags_q = calculate_cloud(tags_q, steps=6)
-        
+
         kwargs.update({
             'tag_object': self.tag_object,
             'ressources_tags': tags_q,
@@ -172,6 +177,7 @@ class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
         self.tag_object = self.get_tag_object()
         return super(AlbumTagRessourcesView, self).get(request, *args, **kwargs)
 
+
 class RessourceDetailView(AlbumConfinementMixin, TemplateView):
     """
     Display the ressources and their tags
@@ -183,6 +189,3 @@ class RessourceDetailView(AlbumConfinementMixin, TemplateView):
         self.album_object = self.get_album_object()
         self.ressource_object = self.get_ressource_object()
         return super(RessourceDetailView, self).get(request, *args, **kwargs)
-
-
-
