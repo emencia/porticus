@@ -1,5 +1,5 @@
-"""Model managers for porticus"""
 from django.db import models
+
 
 class RessourcePublishedManager(models.Manager):
     """Manager for Ressource model"""

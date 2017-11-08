@@ -1,9 +1,11 @@
 """
 Settings for porticus
 """
-gettext = lambda s: s
+_ = lambda s: s
 
-PORTICUS_GALLERIES_PAGINATION = PORTICUS_ALBUMS_PAGINATION = PORTICUS_RESSOURCES_PAGINATION = 16
+PORTICUS_GALLERIES_PAGINATION = 16
+PORTICUS_ALBUMS_PAGINATION = 16
+PORTICUS_RESSOURCES_PAGINATION = 16
 
 # Templates choices in the admin
 PORTICUS_GALLERY_TEMPLATE_CHOICES = (
@@ -33,11 +35,13 @@ PORTICUS_GALLERIES_TEMPLATE_FRAGMENT = 'porticus/templatetags/gallery_list_fragm
 PORTICUS_RESSOURCE_FILETYPES = (
     (0, 'binary'),
     (1, 'image'),
-    (2, "youtube"),
+    (2, "video"),
+    (3, "youtube"),
 )
 PORTICUS_RESSOURCE_FILETYPE_CHOICES = (
-    (0, gettext('Binary')),
-    (1, gettext('Image')),
-    (2, gettext("Youtube (only with 'file_url') usage")),
+    (0, _('Binary')),
+    (1, _('Image')),
+    (2, _("Video")),
+    (2, _("Youtube (in 'file_url' usage)")),
 )
 PORTICUS_RESSOURCE_FILETYPE_DEFAULT = 1

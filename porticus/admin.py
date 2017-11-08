@@ -10,21 +10,26 @@ from filebrowser.settings import ADMIN_THUMBNAIL
 
 from porticus.models import Ressource, Gallery, Album
 
+
 def slide_image_thumbnail(obj):
     if obj.image and obj.image.filetype == "Image":
-        return '<img src="%s" />' % obj.image.version_generate(ADMIN_THUMBNAIL).url
+        url = obj.image.version_generate(ADMIN_THUMBNAIL).url
+        return '<img src="{}">'.format(url)
     else:
-        return _('No image for %s') % unicode(obj)
+        return _('No image for {}').format(obj)
+
+
 slide_image_thumbnail.short_description = _('image')
 slide_image_thumbnail.allow_tags = True
 
 
 class GalleryAdmin(admin.ModelAdmin):
-    ordering = ('-creation_date',)
+    ordering = ('-created',)
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('creation_date', 'publish')
+    list_filter = ('created', 'publish')
     list_editable = ('priority', 'publish', 'template_name')
-    list_display = (slide_image_thumbnail, 'name', 'publish', 'priority', 'template_name')
+    list_display = (slide_image_thumbnail, 'name', 'publish', 'priority',
+                    'template_name')
     list_display_links = (slide_image_thumbnail, 'name')
     prepopulated_fields = {'slug': ('name', )}
     fieldsets = (
@@ -47,11 +52,12 @@ class RessourceInline(admin.StackedInline):
 
 
 class AlbumAdmin(MPTTModelAdmin):
-    ordering = ('-creation_date',)
+    ordering = ('-created',)
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('creation_date', 'gallery', 'publish')
+    list_filter = ('created', 'gallery', 'publish')
     list_editable = ('priority', 'publish', 'template_name')
-    list_display = ('name', 'slug', 'publish', 'priority', 'template_name', 'ressources_count')
+    list_display = ('name', 'slug', 'publish', 'priority', 'template_name',
+                    'ressources_count')
     fieldsets = (
         (None, {
             'fields': ('gallery','parent',)
@@ -80,9 +86,10 @@ class AlbumAdmin(MPTTModelAdmin):
 class RessourceAdmin(admin.ModelAdmin):
     ordering = ('album', 'priority')
     search_fields = ('name', 'description', 'slug')
-    list_filter = ('file_type', 'creation_date', 'album', 'publish')
+    list_filter = ('file_type', 'created', 'album', 'publish')
     list_editable = ('priority', 'publish')
-    list_display = (slide_image_thumbnail, 'album', 'name', 'publish', 'priority', 'file_type')
+    list_display = (slide_image_thumbnail, 'album', 'name', 'publish',
+                    'priority', 'file_type')
     filter_horizontal = ('related',)
     prepopulated_fields = {'slug': ('name', )}
     fieldsets = (
