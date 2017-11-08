@@ -2,6 +2,7 @@
 """
 Common templates tags for porticus
 """
+from six import string_types
 from django.conf import settings
 from django import template
 from django.utils.safestring import mark_safe
@@ -47,7 +48,7 @@ class GalleryList(template.Node):
             current_gallery = self.instance_varname.resolve(context)
             if current_gallery:
                 # Assume this is slug
-                if isinstance(current_gallery, basestring):
+                if isinstance(current_gallery, string_types):
                     current_gallery = Gallery.objects.get(slug=current_gallery, publish=True)
                 # Only accept Gallery model instance
                 elif not isinstance(current_gallery, Gallery):
@@ -120,7 +121,7 @@ class AlbumFragment(template.Node):
         # Default assume this is directly an instance
         album_instance = self.instance_varname.resolve(context)
         # Assume this is slug
-        if isinstance(album_instance, basestring):
+        if isinstance(album_instance, string_types):
             album_instance = Album.objects.get(slug=album_instance, publish=True)
         # Get the album's ressources
         ressources_list = album_instance.ressource_set.filter(publish=True)
@@ -163,15 +164,15 @@ def do_porticus_album_fragment(parser, token):
 do_porticus_album_fragment.is_safe = True
 
 
-def porticus_album_list(gallery_instance, level=0):
+def porticus_album_list(gallery_instance):
     """
     Return a queryset list from a Gallery, this is a flat list of albums, not recursive
 
     Usage : ::
 
-        {% porticus_album_list [Gallery slug or instance] [Optional level] %}
+        {% porticus_album_list [Gallery slug or instance] as gallery_albums %}
     """
-    if isinstance(gallery_instance, basestring):
+    if isinstance(gallery_instance, string_types):
         return get_object_or_404(Gallery, slug=gallery_instance, publish=True).album_set.filter(level=0)
 
     return gallery_instance.album_set.filter(level=0)

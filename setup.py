@@ -26,6 +26,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
+        'six',
         'Django>=1.9',
         'django-filebrowser-no-grappelli>=3.5.6',
         'django-mptt>=0.6.1',

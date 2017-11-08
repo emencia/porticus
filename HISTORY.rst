@@ -3,7 +3,7 @@
 Changelog
 =========
 
-Version 2.0.0 - Unreleased
+Version 2.0.0 - 2017/11/08
 --------------------------
 
 Added Django>=1.9 compatibility, dropped Django<=1.9 support and contains some backward incompatible changes on migrations, models and all, so **you are not advised to migrate your old installs to this version**.
