@@ -1,12 +1,9 @@
-.. _DjangoCMS: https://www.django-cms.org
-.. _South: http://south.readthedocs.org/en/latest/
 .. _mptt: https://github.com/django-mptt/django-mptt/
 .. _django-tagging: https://github.com/brosner/django-tagging
-.. _django-filebrowser: https://github.com/sehmaschine/django-filebrowser
 .. _django-filebrowser-no-grappelli: https://github.com/smacker/django-filebrowser-no-grappelli
 .. _cmsplugin_porticus: https://github.com/emencia/cmsplugin_porticus
 
-porticus
+Porticus
 ========
 
 Yet another File gallery for Django.
@@ -63,6 +60,7 @@ Then add its settings : ::
 
     from porticus.settings import *
 
+
 See included application file ``settings.py`` to know more about available settings you can override.
 
 Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentation for more details) : ::
@@ -72,6 +70,8 @@ Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentati
     FILEBROWSER_MAX_UPLOAD_SIZE = 10*1024*1024 # 10 Mb
 
     FILEBROWSER_NORMALIZE_FILENAME = True
+
+And finally apply migrations.
 
 Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in your project sitemap like so : ::
 
