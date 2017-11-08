@@ -1,19 +1,11 @@
-"""
-Models for porticus
-"""
-import os
-
 from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.utils.timezone import now as tz_now
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 
 from porticus.managers import RessourcePublishedManager
-
-from mptt.models import MPTTModel, TreeForeignKey, TreeManager
 
 from filebrowser.fields import FileBrowseField
 
@@ -75,10 +67,10 @@ class Ressource(models.Model):
         null=True,
         blank=True,
         default=None,
-        help_text=_("Mainly used as a thumbnails")
     )
-    file_type = models.IntegerField(
+    file_type = models.CharField(
         _('file type'),
+        max_length=55,
         choices=get_ressource_filetype_choices(),
         default=get_ressource_filetype_default()
     )
@@ -88,14 +80,10 @@ class Ressource(models.Model):
         null=True,
         blank=True,
         default=None,
-        help_text=_(("Mainly used for original size image or a file "
-                     "to download"))
     )
     file_url = models.URLField(
         _('file url'),
         blank=True,
-        help_text=_(("Same meaning that 'file' attribute but for an external "
-                     "file to use instead"))
     )
     tags = TagField(_('tags'))
 
@@ -107,9 +95,6 @@ class Ressource(models.Model):
 
     def get_tags(self):
         return Tag.objects.get_for_object(self)
-
-    def get_file_kind(self):
-        return dict(settings.PORTICUS_RESSOURCE_FILETYPES)[self.file_type]
 
     @property
     def get_file(self):

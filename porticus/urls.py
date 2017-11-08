@@ -1,7 +1,7 @@
 """
 Urls for porticus
 """
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 from porticus.views import (GalleryListView, GalleryDetailView,
                             GalleryTreeView, AlbumDetailView,
                             AlbumTagRessourcesView, RessourceDetailView)

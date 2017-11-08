@@ -1,23 +1,13 @@
-"""
-Models for porticus
-"""
-import os
-
 from django.conf import settings
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.utils.timezone import now as tz_now
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 
 from porticus.managers import GalleryPublishedManager
 
-from mptt.models import MPTTModel, TreeForeignKey, TreeManager
-
 from filebrowser.fields import FileBrowseField
 
-from tagging.fields import TagField
 from tagging.models import Tag
 
 
@@ -64,7 +54,6 @@ class Gallery(models.Model):
     template_name = models.CharField(
         _('template'),
         max_length=255,
-        help_text=_('Template used to render the gallery'),
         choices=get_gallery_template_choices(),
         default=get_gallery_template_default()
     )

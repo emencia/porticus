@@ -135,6 +135,7 @@ class AlbumDetailView(AlbumConfinementMixin, SimpleListView):
         self.album_object = self.get_album_object()
         return super(AlbumDetailView, self).get(request, *args, **kwargs)
 
+
 class AlbumTagRessourcesView(AlbumConfinementMixin, SimpleListView):
     """
     Template view to list tagged Ressources from an Album

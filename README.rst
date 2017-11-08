@@ -19,8 +19,6 @@ Note that Albums make usage of `mptt`_, so Albums can have album children.
 
 Shipped templates are basics, you probably will have to override them to suit your needs.
 
-A `DjangoCMS`_ plugin is available on `cmsplugin_porticus`_.
-
 Links
 *****
 
@@ -30,16 +28,10 @@ Links
 Requires
 ********
 
-* Django >= 1.7;
-
-  - Last release for *Django<1.6* and *DjangoCMS 2.4* is available on repository branch *djangocms_2*;
-  - Last release for *Django<1.7* and *DjangoCMS 3.0* is available on repository branch *djangocms_1-6*;
-
+* Django >= 1.9;
 * `mptt`_;
 * `django-tagging`_;
-* `django-filebrowser-no-grappelli`_ >= 3.5.6;
-
-**Warning:** Since ``1.0.0``, database migration has been switched to Django 1.7 migrations system and `South`_ support has been dropped. The `South`_ migration files are still there but moved to ``south_migrations``, resulting in you need ``south==1.x`` to use them. This is only needed if you need to migrate project datas to the last Porticus version, you don't have to care about this if you just start a new project.
+* `django-filebrowser-no-grappelli`_;
 
 Install
 *******
@@ -57,7 +49,7 @@ Or to point out a specific gallery : ::
     url(r'^$', 'porticus.views.view_gallery_detail', {'slug':'home-intro'}, name='homepage_gallery_detail'),
 
 Then add the content of ``porticus.settings`` in your settings file and the apps in your ``INSTALLED_APPS`` setting : ::
-    
+
     INSTALLED_APPS = (
         ...
         'mptt',
@@ -71,7 +63,7 @@ Then add its settings : ::
 
     from porticus.settings import *
 
-See the app ``settings.py`` file to see what setting you can override.
+See included application file ``settings.py`` to know more about available settings you can override.
 
 Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentation for more details) : ::
 
@@ -83,7 +75,7 @@ Then some `django-filebrowser-no-grappelli`_ basic settings (see its documentati
 
 Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in your project sitemap like so : ::
 
-    from django.conf.urls import patterns
+    from django.conf.urls import url
     from porticus.sitemaps import PorticusGallerySitemap, PorticusAlbumSitemap, PorticusRessourceSitemap
 
     sitemaps = {
@@ -92,9 +84,9 @@ Also you can find some Sitemap classes in ``sitemaps.py`` that you can mount in 
         'photos': PorticusRessourceSitemap,
     }
 
-    urlpatterns = patterns('',
-        # the sitemap
-        (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps})
-    )
+    urlpatterns = [
+        # Sitemap
+        url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps})
+    ]
 
 See the `Django documentation about Sitemaps <https://docs.djangoproject.com/en/dev/ref/contrib/sitemaps/>`_ for more details.

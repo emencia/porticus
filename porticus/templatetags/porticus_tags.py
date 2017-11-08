@@ -180,6 +180,6 @@ def porticus_album_list(gallery_instance, level=0):
 register.assignment_tag(porticus_album_list)
 
 
-@register.filter(name='embed')
-def embed(value):
-    return value.replace('watch?v=', 'embed/')
+#@register.filter(name='embed')
+#def embed(value):
+    #return value.replace('watch?v=', 'embed/')

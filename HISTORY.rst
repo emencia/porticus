@@ -6,9 +6,12 @@ Changelog
 Version 2.0.0 - Unreleased
 --------------------------
 
-Added Django>=1.9 compatibility, dropped Django<=1.9 support and contains some backward incompatible changes on migrations, models and all, so **your not advised to migrate your old installs to this version**.
+Added Django>=1.9 compatibility, dropped Django<=1.9 support and contains some backward incompatible changes on migrations, models and all, so **you are not advised to migrate your old installs to this version**.
 
-* Migrations has been reset;
+* Migrations have been reset;
+* Models have moved in their own module in ``models/``;
+* Fields ``creation_date`` have been renamed ``created``;
+* Some fixes for Django>=1.9 support;
 
 
 Version 1.1.4 - 2016/10/19
