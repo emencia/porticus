@@ -30,6 +30,8 @@ Requires
 * `django-tagging`_;
 * `django-filebrowser-no-grappelli`_;
 
+And optionnally ``djangocms_text_ckeditor`` to use ``TextEditorWidget`` on gallery, album and ressource descriptions. If not, simple Textarea widget is used instead.
+
 Install
 *******
 

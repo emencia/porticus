@@ -1,6 +1,8 @@
 """
 Admin for porticus
 """
+from django.conf import settings
+from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,6 +11,14 @@ from mptt.admin import MPTTModelAdmin
 from filebrowser.settings import ADMIN_THUMBNAIL
 
 from porticus.models import Ressource, Gallery, Album
+
+try:
+    from djangocms_text_ckeditor.widgets import TextEditorWidget
+    global_formfield_overrides = {
+        models.TextField: {'widget': TextEditorWidget},
+    }
+except ImportError:
+    global_formfield_overrides = {}
 
 
 def slide_image_thumbnail(obj):
@@ -43,12 +53,14 @@ class GalleryAdmin(admin.ModelAdmin):
             'fields': ('description',),
         }),
     )
+    formfield_overrides = global_formfield_overrides
 
 
 class RessourceInline(admin.StackedInline):
     model = Ressource
     ordering = ('priority', 'name')
     prepopulated_fields = {'slug': ('name', )}
+    formfield_overrides = global_formfield_overrides
 
 
 class AlbumAdmin(MPTTModelAdmin):
@@ -73,6 +85,7 @@ class AlbumAdmin(MPTTModelAdmin):
         }),
     )
     prepopulated_fields = {'slug': ('name', )}
+    formfield_overrides = global_formfield_overrides
     inlines = [
         RessourceInline,
     ]
@@ -111,6 +124,7 @@ class RessourceAdmin(admin.ModelAdmin):
             'fields': ('tags', 'related',),
         }),
     )
+    formfield_overrides = global_formfield_overrides
 
 
 admin.site.register(Gallery, GalleryAdmin)

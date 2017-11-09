@@ -31,15 +31,15 @@
                 {% else %}
                     <a href="{{ ressource.file.url }}" class="popup-link" target="_blank">
                 {% endif %}
-                
+
                 {% if ressource.image %}
-                    {% version_object ressource.image 'thumbnail' as image_thumb %}
+                    {% version ressource.image 'thumbnail' as image_thumb %}
                     <img src="{{ image_thumb.url }}" alt="">
                 {% endif %}
-                
+
                     <h4>{{ ressource.name }}</h4>
                 </a>
-                
+
                 {% if ressource.description %}
                 <div class="description">
                     <p>{{ ressource.description }}</p>
@@ -48,7 +48,7 @@
             </div>
         {% endspaceless %}
         {% endfor %}</div>
-        
+
         {% if is_paginated %}<ul class="pagination right">
             {% if page_obj.has_previous %}<li class="arrow"><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>{% endif %}
             {% for item in paginator.page_range %}
